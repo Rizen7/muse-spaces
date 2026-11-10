@@ -4,88 +4,359 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>公开资讯页</title>
-  <style>/* 公共基础样式。换皮肤时一般保留本文件，改 news.css / deals.css / index.css。 */
-*, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
-body {
-  margin: 0;
-  line-height: 1.6;
-  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans CJK SC", "Noto Sans SC",
-    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  <style>/* D 夜间刊 · 公共基础样式 */
+:root {
+  --bg: #07080d;
+  --card: #12141c;
+  --line: rgba(255,255,255,.10);
+  --text: #f5f7fb;
+  --muted: #c3c8d4;
+  --mint: #3ef0c8;
+  --gold: #ffc44d;
+  --rose: #ff6b81;
+  --blue: #7cb8ff;
+  --sans: "PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",system-ui,-apple-system,sans-serif;
 }
-a { color: inherit; }
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; background: #07080d; }
+html, body { margin: 0; }
+body {
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  font-family: var(--sans);
+  background:
+    radial-gradient(800px 420px at 0% 0%, rgba(62,240,200,.14), transparent 55%) no-repeat,
+    radial-gradient(640px 480px at 100% 10%, rgba(255,196,77,.09), transparent 50%) no-repeat,
+    var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+}
+a { color: inherit; text-decoration: none; }
 img { max-width: 100%; height: auto; }
 
-/* 首页样式。替换本文件即可换肤，保持下方类名不变。 */
-body {
-  background: #f5f5f3;
-  color: #1a1a1a;
-}
+/* ── 通用包裹 ── */
 .wrap {
-  max-width: 960px;
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 24px 16px;
+  padding: 24px 18px 72px;
 }
-@media (min-width: 768px) {
-  .wrap { padding: 48px 32px; }
+@media (max-width: 700px) {
+  .wrap { padding: 16px 14px 56px; }
 }
-header h1 {
-  margin: 0 0 8px;
-  font-size: 1.7rem;
-}
-.lead { margin: 0 0 24px; color: #444; }
 
-.entries {
-  display: grid;
-  grid-template-columns: 1fr;
+/* ── 顶部区域 ── */
+.top {
+  display: flex;
+  justify-content: space-between;
   gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-bottom: 20px;
 }
-@media (min-width: 768px) {
-  .entries { grid-template-columns: 1fr 1fr; gap: 24px; }
+.kicker {
+  font-size: 12px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--mint);
+  font-weight: 700;
+  margin: 0 0 4px;
 }
-.card {
-  display: block;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  padding: 20px;
-  text-decoration: none;
-  color: inherit;
+h1.page-title {
+  margin: 0;
+  font-size: clamp(28px, 5vw, 48px);
+  letter-spacing: -.04em;
+  font-weight: 800;
+  line-height: 1.1;
 }
-.card:hover { border-color: #888; }
-.card h2 { margin: 0 0 8px; font-size: 1.2rem; }
-.card p { margin: 0; color: #555; font-size: 14px; }
-.banner-sample {
-  display: inline-block;
-  margin: 0 0 16px;
-  padding: 2px 8px;
-  border: 1px solid #b45309;
-  color: #9a3412;
-  background: #fff7ed;
+
+/* ── 状态胶囊 ── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  background: rgba(18,20,28,.85);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--muted);
+  min-height: 40px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+.pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 10px var(--mint);
+  flex-shrink: 0;
+}
+.pill-dot.warn { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+.pill-dot.fail { background: var(--rose); box-shadow: 0 0 10px var(--rose); }
+
+/* ── 导航按钮条（站内切换：首页/资讯/薅羊毛） ── */
+.site-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 18px;
+}
+.site-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  white-space: nowrap;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--muted);
+  border-radius: 10px;
+  padding: 6px 14px;
   font-size: 13px;
+  text-decoration: none;
+  transition: border-color .15s;
 }
+.site-nav a:hover { border-color: rgba(255,255,255,.3); color: var(--text); }
+.site-nav a.current {
+  color: #04110d;
+  background: var(--mint);
+  border-color: var(--mint);
+  font-weight: 800;
+}
+
+/* ── 试跑样例横幅 ── */
+.banner-sample {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  margin: 0 0 12px;
+  padding: 4px 12px;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  background: rgba(255,196,77,.08);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+/* ── 失败面板 ── */
+.fail-panel {
+  background: rgba(58,18,24,.5);
+  border: 1px solid #7a303c;
+  border-radius: 16px;
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 1.15rem;
+  color: #ffc1c8;
+  font-weight: 700;
+}
+
+/* ── 重点徽章 ── */
+.badges {
+  display: inline-flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  padding: 2px 8px;
+  border-radius: 6px;
+  line-height: 1.6;
+}
+.badge-important { background: #ff6b81; color: #1a0008; }
+.badge-hot       { background: #ffc44d; color: #1a0d00; }
+.badge-useful    { background: #3ef0c8; color: #001a14; }
+
+/* ── 原文标题副标题 ── */
+.title-en {
+  font-size: 13px;
+  color: #9eaabf;
+  line-height: 1.5;
+  margin: 2px 0 8px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* ── 页脚 ── */
 footer {
   margin-top: 32px;
-  color: #888;
-  font-size: 13px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: #a3aab8;
+  font-size: 12px;
+  line-height: 1.6;
+}
+footer p { margin: 0; }
+
+/* D 夜间刊 · 首页样式 */
+
+/* ── 首页容器缩窄一些 ── */
+.wrap {
+  max-width: 800px;
+  padding: 40px 18px 72px;
+}
+@media (max-width: 700px) {
+  .wrap { padding: 24px 14px 56px; }
+}
+
+/* ── 首页顶部 ── */
+.index-top {
+  margin-bottom: 36px;
+}
+.index-top .kicker { margin-bottom: 6px; }
+.index-top h1 {
+  margin: 0 0 12px;
+  font-size: clamp(28px, 6vw, 52px);
+  letter-spacing: -.05em;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.index-top .lead {
+  margin: 0;
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* ── 两个空间入口卡片 ── */
+.entries {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .entries { grid-template-columns: 1fr; }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 24px 22px 20px;
+  text-decoration: none;
+  color: inherit;
+  min-height: 160px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.card:hover {
+  border-color: rgba(62,240,200,.4);
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+}
+.card:last-child:hover {
+  border-color: rgba(255,196,77,.4);
+}
+.card:first-child { /* 资讯入口带薄荷渐变 */
+  background:
+    linear-gradient(135deg, rgba(62,240,200,.08), transparent 50%),
+    var(--card);
+}
+.card:last-child { /* 薅羊毛入口带金色渐变 */
+  background:
+    linear-gradient(135deg, rgba(255,196,77,.07), transparent 50%),
+    var(--card);
+}
+
+.card-kicker {
+  font-size: 12px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--mint);
+  margin-bottom: 8px;
+}
+.card:last-child .card-kicker {
+  color: var(--gold);
+}
+
+.card h2 {
+  margin: 0 0 8px;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+.card > p {
+  margin: 0 0 auto;
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+.space-meta {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #c3c8d4;
+  line-height: 1.5;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(7,8,13,.6);
+  align-self: flex-start;
+  flex-wrap: wrap;
+}
+.space-meta .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 10px var(--mint);
+  flex: none;
+}
+.space-meta:has(.status-partial) .dot { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+.space-meta:has(.status-fail) .dot { background: var(--rose); box-shadow: 0 0 10px var(--rose); }
+.space-meta .status-fail    { color: var(--rose); font-weight: 700; }
+.space-meta .status-partial { display: inline; color: var(--gold); font-weight: 700; }
+
+/* 状态数量标注（如果有）：右下角入口标签 */
+.card-enter {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: var(--mint);
+  color: #04110d;
+  font-size: 15px;
+  font-weight: 800;
+  align-self: flex-start;
+  margin-top: 16px;
+  letter-spacing: .06em;
 }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <header>
+    <div class="index-top">
+      <div class="kicker">Muse Spaces · Night</div>
       <h1>公开资讯页</h1>
-      <p class="banner-sample">试跑样例</p>
-
       <p class="lead">手机和电脑都可以直接打开，不用登录。</p>
-    </header>
+    </div>
+    
     <main class="entries">
       <a class="card" href="news/">
+        <span class="card-kicker">Night Edition</span>
         <h2>国内外资讯</h2>
         <p>AI、科技、经济、社会、文化、游戏，按国内 / 国际分栏。</p>
+        <p class="space-meta"><span class="dot"></span>更新于 2026-11-11 06:51（北京时间）</p>
+        <span class="card-enter">进入 →</span>
       </a>
       <a class="card" href="deals/">
+        <span class="card-kicker">Quest Board</span>
         <h2>薅羊毛</h2>
         <p>白嫖、限免、低价、币圈空投、NFT。</p>
+        <p class="space-meta"><span class="dot"></span>更新于 2026-11-10 23:42（北京时间）</p>
+        <span class="card-enter">进入 →</span>
       </a>
     </main>
     <footer>
