@@ -1,52 +1,138 @@
-/* 首页样式。替换本文件即可换肤，保持下方类名不变。 */
-body {
-  background: #f5f5f3;
-  color: #1a1a1a;
-}
-.wrap {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 24px 16px;
-}
-@media (min-width: 768px) {
-  .wrap { padding: 48px 32px; }
-}
-header h1 {
-  margin: 0 0 8px;
-  font-size: 1.7rem;
-}
-.lead { margin: 0 0 24px; color: #444; }
+/* D 夜间刊 · 首页样式 */
+@import url("common.css"); /* 仅作说明：实际由 render.py 内联 */
 
+/* ── 首页容器缩窄一些 ── */
+.wrap {
+  max-width: 800px;
+  padding: 40px 18px 72px;
+}
+@media (max-width: 700px) {
+  .wrap { padding: 24px 14px 56px; }
+}
+
+/* ── 首页顶部 ── */
+.index-top {
+  margin-bottom: 36px;
+}
+.index-top .kicker { margin-bottom: 6px; }
+.index-top h1 {
+  margin: 0 0 12px;
+  font-size: clamp(28px, 6vw, 52px);
+  letter-spacing: -.05em;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.index-top .lead {
+  margin: 0;
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* ── 两个空间入口卡片 ── */
 .entries {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
-@media (min-width: 768px) {
-  .entries { grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 600px) {
+  .entries { grid-template-columns: 1fr; }
 }
+
 .card {
-  display: block;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 24px 22px 20px;
   text-decoration: none;
   color: inherit;
+  min-height: 160px;
+  transition: border-color .15s, box-shadow .15s;
 }
-.card:hover { border-color: #888; }
-.card h2 { margin: 0 0 8px; font-size: 1.2rem; }
-.card p { margin: 0; color: #555; font-size: 14px; }
-.banner-sample {
-  display: inline-block;
-  margin: 0 0 16px;
-  padding: 2px 8px;
-  border: 1px solid #b45309;
-  color: #9a3412;
-  background: #fff7ed;
-  font-size: 13px;
+.card:hover {
+  border-color: rgba(62,240,200,.4);
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
 }
-footer {
-  margin-top: 32px;
-  color: #888;
-  font-size: 13px;
+.card:last-child:hover {
+  border-color: rgba(255,196,77,.4);
+}
+.card:first-child { /* 资讯入口带薄荷渐变 */
+  background:
+    linear-gradient(135deg, rgba(62,240,200,.08), transparent 50%),
+    var(--card);
+}
+.card:last-child { /* 薅羊毛入口带金色渐变 */
+  background:
+    linear-gradient(135deg, rgba(255,196,77,.07), transparent 50%),
+    var(--card);
+}
+
+.card-kicker {
+  font-size: 12px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--mint);
+  margin-bottom: 8px;
+}
+.card:last-child .card-kicker {
+  color: var(--gold);
+}
+
+.card h2 {
+  margin: 0 0 8px;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+.card > p {
+  margin: 0 0 auto;
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+.space-meta {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #c3c8d4;
+  line-height: 1.5;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(7,8,13,.6);
+  align-self: flex-start;
+  flex-wrap: wrap;
+}
+.space-meta .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 10px var(--mint);
+  flex: none;
+}
+.space-meta:has(.status-partial) .dot { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+.space-meta:has(.status-fail) .dot { background: var(--rose); box-shadow: 0 0 10px var(--rose); }
+.space-meta .status-fail    { color: var(--rose); font-weight: 700; }
+.space-meta .status-partial { display: inline; color: var(--gold); font-weight: 700; }
+
+/* 状态数量标注（如果有）：右下角入口标签 */
+.card-enter {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: var(--mint);
+  color: #04110d;
+  font-size: 15px;
+  font-weight: 800;
+  align-self: flex-start;
+  margin-top: 16px;
+  letter-spacing: .06em;
 }

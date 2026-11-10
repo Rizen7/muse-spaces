@@ -3,20 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>{{title}}</title>
+  <title>{{title}} · 夜间版</title>
   <meta name="format-detection" content="telephone=no">
+  <meta name="muse-updated" content="{{updated}}">
+  <meta name="muse-status" content="{{muse_status}}">
   <style>{{css}}</style>
 </head>
 <body>
   <div class="wrap">
-    <header>
-      {{nav}}
-      <h1>国内外资讯</h1>
-      {{banner}}
-      <p class="updated">{{updated}}</p>
-      {{status_note}}
-      {{toc}}
+    <nav class="site-nav">{{nav}}</nav>
+    <header class="top">
+      <div>
+        <div class="kicker">Night Edition · Live</div>
+        <h1 class="page-title">国内外资讯</h1>
+      </div>
+      {{pill}}
     </header>
+    {{banner}}
+    {{sec_nav}}
     <main>
       {{content}}
     </main>

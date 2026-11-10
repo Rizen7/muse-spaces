@@ -3,20 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>{{title}}</title>
+  <title>{{title}} · 夜市任务板</title>
   <meta name="format-detection" content="telephone=no">
+  <meta name="muse-updated" content="{{updated}}">
+  <meta name="muse-status" content="{{muse_status}}">
   <style>{{css}}</style>
 </head>
 <body>
   <div class="wrap">
-    <header>
-      {{nav}}
-      <p class="kicker">QUEST BOARD</p>
-      <h1>薅羊毛</h1>
-      {{banner}}
-      <p class="updated">{{updated}}</p>
-      {{status_note}}
+    <nav class="site-nav">{{nav}}</nav>
+    <header class="top">
+      <div>
+        <div class="kicker">Night Market · Quest Board</div>
+        <h1 class="page-title">薅羊毛</h1>
+      </div>
+      {{pill}}
     </header>
+    {{banner}}
+    {{tabs}}
     <main>
       {{content}}
     </main>
@@ -24,5 +28,6 @@
       <p>内容仅供参考，请以原文为准。标有「⚠ 风险高」的条目请谨慎对待。</p>
     </footer>
   </div>
+  {{filter_js}}
 </body>
 </html>
