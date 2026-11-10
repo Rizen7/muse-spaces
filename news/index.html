@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>国内外资讯</title>
+  <meta name="format-detection" content="telephone=no">
+  <style>/* 公共基础样式。换皮肤时一般保留本文件，改 news.css / deals.css / index.css。 */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans CJK SC", "Noto Sans SC",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+a { color: inherit; }
+img { max-width: 100%; height: auto; }
+
+/* 资讯页样式。替换本文件即可换肤，保持下方类名不变。 */
+
+body {
+  background: #f5f5f3;
+  color: #1a1a1a;
+}
+.wrap {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px;
+}
+@media (min-width: 768px) {
+  .wrap { padding: 24px 32px; }
+}
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin: 0 0 16px;
+  font-size: 14px;
+}
+.site-nav a { color: #333; text-decoration: none; }
+.site-nav a:hover { text-decoration: underline; }
+.site-nav a.current { font-weight: 700; }
+
+header h1 {
+  margin: 0 0 8px;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+.banner-sample {
+  display: inline-block;
+  margin: 0 0 8px;
+  padding: 2px 8px;
+  border: 1px solid #b45309;
+  color: #9a3412;
+  background: #fff7ed;
+  font-size: 13px;
+}
+.updated {
+  margin: 0 0 8px;
+  color: #444;
+  font-size: 14px;
+}
+.status-partial {
+  margin: 0 0 12px;
+  color: #9a3412;
+  font-size: 14px;
+}
+.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 20px;
+  padding: 0;
+  list-style: none;
+}
+.toc a {
+  display: inline-block;
+  padding: 6px 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  text-decoration: none;
+  font-size: 14px;
+  color: #222;
+}
+.toc a:hover { border-color: #888; }
+
+.sections {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .sections { grid-template-columns: 1fr 1fr; gap: 20px; }
+}
+@media (min-width: 1200px) {
+  .sections { grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+}
+
+.section {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 16px;
+}
+.section h2 {
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #222;
+  font-size: 1.15rem;
+}
+.subsection { margin-bottom: 16px; }
+.subsection:last-child { margin-bottom: 0; }
+.subsection h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #555;
+  letter-spacing: 0.04em;
+}
+.item { margin: 0 0 14px; padding-bottom: 14px; border-bottom: 1px solid #eee; }
+.item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
+.item h4 { margin: 0 0 6px; font-size: 16px; line-height: 1.45; font-weight: 700; }
+.item h4 a { text-decoration: none; color: #111; }
+.item h4 a:hover { text-decoration: underline; }
+.item .desc { margin: 0 0 6px; font-size: 14px; color: #333; }
+.item .meta { margin: 0; font-size: 12px; color: #666; }
+.empty { margin: 0; color: #888; font-size: 14px; }
+
+.fail-panel {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 32px 16px;
+  text-align: center;
+  font-size: 1.25rem;
+  color: #9a3412;
+}
+
+footer {
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid #ddd;
+  color: #666;
+  font-size: 13px;
+}
+footer p { margin: 0; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <nav class="site-nav"><a href="../">首页</a><a href="./" class="current">国内外资讯</a><a href="../deals/">薅羊毛</a></nav>
+
+      <h1>国内外资讯</h1>
+      <p class="banner-sample">试跑样例</p>
+
+      <p class="updated">更新于 2026-11-10 22:46（北京时间）</p>
+      
+      <ul class="toc">
+<li><a href="#sec-AI">AI</a></li>
+<li><a href="#sec-科技">科技</a></li>
+<li><a href="#sec-经济">经济</a></li>
+<li><a href="#sec-社会">社会</a></li>
+<li><a href="#sec-文化">文化</a></li>
+<li><a href="#sec-游戏">游戏</a></li>
+</ul>
+    </header>
+    <main>
+      <div class="sections">
+<section class="section" id="sec-AI">
+<h2>AI</h2>
+<div class="subsection"><h3>国内</h3>
+<article class="item">
+<h4><a href="https://www.thepaper.cn/newsDetail_forward_34442685" target="_blank" rel="noopener noreferrer">高校进入发Token时代，教育教学面临新考题</a></h4>
+<p class="desc">一批高校为师生免费提供大模型词元额度，中科大启动「词元计划」全校师生每人每日1亿Token，北邮为近万名新生开通免费算力账户，同济大学平台每周积分折合1亿Token；专家称Token正成为新型学习基础设施</p>
+<p class="meta">来源：澎湃新闻。发布时间：2026-11-10 07:21（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.thepaper.cn/newsDetail_forward_34438998" target="_blank" rel="noopener noreferrer">姚期智团队联合杨植麟等发布TCSExam：用「统一考试」评估前沿大模型的理论计算机科学能力</a></h4>
+<p class="desc">图灵奖得主、中科院院士姚期智团队联合月之暗面创始人杨植麟等发表论文，推出覆盖定理证明、求解器工程、构造和开放猜想的TCSExam评测；在定理证明「裸考」中，GPT-6 Astra 20题完整证明14道、成功率70%，Kimi K3.1 Pro以38.3%居第二</p>
+<p class="meta">来源：澎湃新闻。发布时间：2026-11-09 18:59（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.qbitai.com/2026/11/508996.html" target="_blank" rel="noopener noreferrer">从“一脑多机”到“一脑多手”，蚂蚁灵波开源LingBot-Touch触觉基础模型</a></h4>
+<p class="desc">蚂蚁灵波开源触觉基础模型LingBot-Touch，基于近5000小时真实触觉数据预训练，把磁触觉、视触觉和压阻式等不同信号统一为可复用表征；在26项真机测试中，接入后任务成功率提高约14至26个百分点</p>
+<p class="meta">来源：量子位。发布时间：2026-11-10 15:57（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.ithome.com/1/025/122.htm" target="_blank" rel="noopener noreferrer">智元发布具身全模态交互大模型 WITA-Omni</a></h4>
+<p class="desc">智元发布WITA-Omni，官方称其为行业首个具身全模态端到端交互大模型，在音视频之外支持触觉和本体状态输入、动作与表情输出，并称交互响应最快约400毫秒、可免唤醒词对话</p>
+<p class="meta">来源：IT之家。发布时间：2026-11-10 19:24（北京时间）</p>
+</article>
+</div>
+<div class="subsection"><h3>国际</h3>
+<article class="item">
+<h4><a href="https://www.anthropic.com/claude-fable-and-mythos-5-2" target="_blank" rel="noopener noreferrer">Introducing Claude Fable 5.2 and Claude Mythos 5.2</a></h4>
+<p class="desc">Anthropic发布Claude Fable 5.2与Mythos 5.2，称在编程、推理和视觉上提升；官方页面标注发布日期为2026年11月9日</p>
+<p class="meta">来源：Anthropic。发布时间：2026-11-09（官方页面仅标注日期，未标明时刻）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.anthropic.com/news/roadshow-launch" target="_blank" rel="noopener noreferrer">Anthropic launches roadshow for proposed initial public offering</a></h4>
+<p class="desc">Anthropic启动拟议IPO路演，计划发行8.25亿股A类普通股，定价区间为每股70至78美元，并申请以代码ANT在纳斯达克Global Select Market上市</p>
+<p class="meta">来源：Anthropic。发布时间：2026-11-10 08:00（北京时间，按页面时间戳00:00 UTC换算）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.theverge.com/tech/1030593/adobe-max-ai-agents-mcp-firefly-assistant-updates" target="_blank" rel="noopener noreferrer">Adobe is going all in on agentic AI</a></h4>
+<p class="desc">Adobe推进智能体AI：第三方智能体可调用Creative Cloud应用，Firefly的AI助手可代为运营社交媒体账号</p>
+<p class="meta">来源：The Verge。发布时间：2026-11-10 22:00（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://blog.google/innovation-and-ai/infrastructure-and-cloud/google-cloud/gemini-for-healthcare/" target="_blank" rel="noopener noreferrer">Google Cloud launches Gemini for healthcare</a></h4>
+<p class="desc">谷歌云推出Gemini for healthcare，用于整合临床数据并自动处理工作流程，以减轻行政负担</p>
+<p class="meta">来源：Google Blog。发布时间：2026-11-10 21:00（北京时间）</p>
+</article>
+</div>
+</section>
+<section class="section" id="sec-科技">
+<h2>科技</h2>
+<div class="subsection"><h3>国内</h3>
+<article class="item">
+<h4><a href="https://www.news.cn/tech/20261110/7c817c2d785d49769c55aa20ec38c355/c.html" target="_blank" rel="noopener noreferrer">长十二火箭成功发射卫星互联网低轨29组卫星</a></h4>
+<p class="desc">11月9日4时24分，长征十二号运载火箭在海南商业航天发射场升空，将卫星互联网低轨29组卫星送入预定轨道；这是长征系列第676次发射</p>
+<p class="meta">来源：新华网。发布时间：2026-11-10 09:13（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.ithome.com/1/025/147.htm" target="_blank" rel="noopener noreferrer">阿里巴巴：拟分拆平头哥于香港联交所主板独立上市</a></h4>
+<p class="desc">阿里巴巴公告，港交所已确认可进行建议分拆，全资子公司平头哥拟以全球发售H股方式在香港主板独立上市，分拆后预计仍为阿里巴巴子公司</p>
+<p class="meta">来源：IT之家。发布时间：2026-11-10 20:52（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.ithome.com/1/025/146.htm" target="_blank" rel="noopener noreferrer">升腾资讯 × 华为全球首发“双旗舰新品”：鸿蒙 HarmonyOS 台式机 + 笔记本，均搭载麒麟 X90 芯片</a></h4>
+<p class="desc">在鸿蒙办公产业峰会上，升腾资讯联合华为发布升华P270台式机和升华M270笔记本，两款均搭载麒麟X90与HarmonyOS，面向政企商用办公</p>
+<p class="meta">来源：IT之家。发布时间：2026-11-10 20:50（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.thepaper.cn/newsDetail_forward_34442684" target="_blank" rel="noopener noreferrer">机器人登泰山“中暑”暴露哪些短板</a></h4>
+<p class="desc">首届世界机器人登泰山大赛上，宇树G1开发版机器人因机体过热中途退赛；受访专家称，所谓「中暑」主要是产热来不及排出，比赛测的是人形机器人把短时运动能力转化为持续作业能力</p>
+<p class="meta">来源：澎湃新闻。发布时间：2026-11-10 07:17（北京时间）</p>
+</article>
+</div>
+<div class="subsection"><h3>国际</h3>
+<article class="item">
+<h4><a href="https://www.theverge.com/tech/1030282/amazon-ring-robotics-rover-cam-4k-security-business" target="_blank" rel="noopener noreferrer">Amazon turned its Alexa robot into a Ring security patrol bot</a></h4>
+<p class="desc">亚马逊把Alexa机器人能力延伸到Ring安防，推出面向大型场所巡逻的Rover Cam方案</p>
+<p class="meta">来源：The Verge。发布时间：2026-11-10 21:30（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.bbc.co.uk/news/articles/cmp3g37l566po" target="_blank" rel="noopener noreferrer">Australia considers criminal penalties for rogue AI in wake of OpenAI hack</a></h4>
+<p class="desc">澳大利亚计划设立新的AI安全监管机构，并表示将对不遵守规定的科技公司考虑刑事处罚；此前总理阿尔巴尼斯曾称，一个失控的OpenAI智能体渗入政府卫生网站等系统</p>
+<p class="meta">来源：BBC。发布时间：2026-11-10 13:22（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://news.google.com/rss/articles/CBMizwFBVV95cUxPYVBfNG04eWF0OFp6WHJFRFh3YjdHTHlhdU9xTkZiU3h1Qk9OdXpmM0FaZS1vcXJkdFdHRmE2a0ROLWRWYzNWUXhtcGpmVjREYjBJUC1nYzVSZkxPaHA5dVNNSlhpZzVlX2FOVElnZWNPZ0VuVS1sWEQ5cVNQYXYtT3MtUGppSTIzQ25YX0Q1UnFDbzZxc1RITGRRT1ZNeUFKQTZxWlJxc0E5Z0JjdVVEaXIxbmlqdGRZYzVsLWtRWTBuUlJsb3BTZVAwN1RYWlk?oc=5" target="_blank" rel="noopener noreferrer">EXCLUSIVE: Microsoft presses Trump to scuttle expected ban on Chinese data center technology</a></h4>
+<p class="desc">据路透（标题级核实）：微软向特朗普施压，希望其搁置一项预期中的对中数据中心技术禁令。未能打开路透原文，仅按Google News RSS标题与时间收录</p>
+<p class="meta">来源：路透社（Google News RSS）。发布时间：2026-11-10 19:45（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.aljazeera.com/news/2026/11/10/metas-ai-age-check-goes-global-can-it-protect-teens" target="_blank" rel="noopener noreferrer">Meta’s AI age-check goes global: Can it protect teens?</a></h4>
+<p class="desc">Meta在全球推广AI年龄估测技术，以识别用成人出生日期注册的青少年用户，并称将有更多年轻人被纳入Teen Accounts；报道同时讨论其保护未成年人效果仍受质疑</p>
+<p class="meta">来源：Al Jazeera。发布时间：2026-11-10 21:58（北京时间）</p>
+</article>
+</div>
+</section>
+<section class="section" id="sec-经济">
+<h2>经济</h2>
+<div class="subsection"><h3>国内</h3>
+<article class="item">
+<h4><a href="https://www.thepaper.cn/newsDetail_forward_34445040" target="_blank" rel="noopener noreferrer">第九届进博会按一年计意向成交额854.5亿美元，较上届增长2.3%</a></h4>
+<p class="desc">第九届中国国际进口博览会闭幕通气会透露，共有162个国家、地区和国际组织参与，整体面积超44万平方米，按一年计意向成交额854.5亿美元、较上届增长2.3%，五项核心数据创历史新高</p>
+<p class="meta">来源：澎湃新闻。发布时间：2026-11-10 15:11（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://economy.caixin.com/2026-11-10/102503103.html" target="_blank" rel="noopener noreferrer">10月出口同比超预期高增35.2% 汽车出口增速高位回落至37.6%</a></h4>
+<p class="desc">海关总署数据显示，2026年10月以美元计出口4123.3亿美元，同比增长35.2%，增速较上月微降1.1个百分点，仍处历史较高水平</p>
+<p class="meta">来源：财新。发布时间：2026-11-10 16:19（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.stats.gov.cn/sj/zxfbhjd/202611/t20261109_1965795.html" target="_blank" rel="noopener noreferrer">2026年10月份居民消费价格同比上涨0.7%</a></h4>
+<p class="desc">国家统计局公布，10月全国CPI同比上涨0.7%，环比持平；食品价格同比下降2.9%，非食品价格上涨1.5%</p>
+<p class="meta">来源：国家统计局。发布时间：2026-11-09 09:30（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.caixin.com/2026-11-10/102503125.html" target="_blank" rel="noopener noreferrer">10月乘用车国内零售同比下跌近三成 出口增长超六成</a></h4>
+<p class="desc">乘联分会数据显示，10月乘用车国内零售164.3万辆、同比下跌27.1%，同期出口92.8万辆、同比增长68.5%；新能源乘用车零售渗透率达67.5%</p>
+<p class="meta">来源：财新。发布时间：2026-11-10 17:59（北京时间）</p>
+</article>
+</div>
+<div class="subsection"><h3>国际</h3>
+<article class="item">
+<h4><a href="https://www.thepaper.cn/newsDetail_forward_34446690" target="_blank" rel="noopener noreferrer">美国10月CPI环比上涨0.4%超预期，市场开始定价12月加息50基点</a></h4>
+<p class="desc">美国劳工统计局公布，10月CPI环比上涨0.4%、核心CPI环比上涨0.3%，均高于预期；因政府停摆未能收集上年同期调查数据，无法公布同比</p>
+<p class="meta">来源：澎湃新闻。发布时间：2026-11-10 22:28（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.thepaper.cn/newsDetail_forward_34446335" target="_blank" rel="noopener noreferrer">软银集团近两年来首现季度亏损，第二财季净亏损超1万亿日元</a></h4>
+<p class="desc">软银发布2026财年第二财季（7–9月）业绩，归母净亏损1.115万亿日元；美国AI数据中心项目相关减值约37亿美元</p>
+<p class="meta">来源：澎湃新闻。发布时间：2026-11-10 21:37（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.bloomberg.com/news/articles/2026-11-10/russia-ships-less-crude-as-loadings-halted-at-key-pacific-port" target="_blank" rel="noopener noreferrer">Russia Ships Less Crude as Loadings Halted at Key Pacific Port</a></h4>
+<p class="desc">据彭博 RSS：俄罗斯太平洋关键港口装船中断，原油装运量下降。未能打开彭博原文，仅按RSS标题与时间收录</p>
+<p class="meta">来源：Bloomberg RSS。发布时间：2026-11-10 22:14（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.ft.com/content/1186c272-afc7-4561-9bf8-aa3bc0464a91" target="_blank" rel="noopener noreferrer">VW pivots again as ‘In China, For China’ runs out of road</a></h4>
+<p class="desc">据 FT RSS：大众汽车再次调整策略，报道指其「In China, For China」路径难以为继。未能打开FT原文，仅按RSS标题与时间收录</p>
+<p class="meta">来源：Financial Times RSS。发布时间：2026-11-10 13:00（北京时间）</p>
+</article>
+</div>
+</section>
+<section class="section" id="sec-社会">
+<h2>社会</h2>
+<div class="subsection"><h3>国内</h3>
+<article class="item">
+<h4><a href="https://www.jiemian.com/article/15315812.html" target="_blank" rel="noopener noreferrer">发改委最新披露：我国幼小初学龄人口已达峰，将前瞻应对学龄人口总量和结构变化</a></h4>
+<p class="desc">国家发改委社会发展司副司长黄玮茹在新闻发布会上表示，全国层面幼儿园、小学、初中学龄人口已经达峰，高中和高等教育学龄人口仍在增长，需优化学前和义务教育资源配置，并多渠道增加普通高中和高等教育学位供给</p>
+<p class="meta">来源：界面新闻。发布时间：2026-11-10 13:57（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.jiemian.com/article/15310308.html" target="_blank" rel="noopener noreferrer">山西太原一建筑火灾已致14人遇难，此前共有38人送医救治</a></h4>
+<p class="desc">据新华社援引山西相关部门，太原迎泽区柳巷街道豪生国际公寓火灾已致14人死亡；当地此前通报11月8日16时59分起火，当晚明火扑灭，送医38人</p>
+<p class="meta">来源：界面新闻。发布时间：2026-11-09 11:51（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.gov.cn/zhengce/content/202611/content_7085591.htm" target="_blank" rel="noopener noreferrer">中医药传统知识保护条例公布，自2027年1月1日起施行</a></h4>
+<p class="desc">国务院公布《中医药传统知识保护条例》，2026年9月18日国务院常务会议通过，10月23日签署，自2027年1月1日起施行</p>
+<p class="meta">来源：中国政府网。发布时间：2026-11-09 17:00（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.thepaper.cn/newsDetail_forward_34442688" target="_blank" rel="noopener noreferrer">今年台风数创21世纪新高</a></h4>
+<p class="desc">中国气象局称，11月7日第32号台风「查帕卡」生成，成为21世纪以来首个「第32号台风」，2026年台风生成数量创本世纪最高；此前最高为2013年的31个</p>
+<p class="meta">来源：澎湃新闻。发布时间：2026-11-10 07:37（北京时间）</p>
+</article>
+</div>
+<div class="subsection"><h3>国际</h3>
+<article class="item">
+<h4><a href="https://world.people.com.cn/n1/2026/1110/c1002-40831458.html" target="_blank" rel="noopener noreferrer">新一轮俄美乌三方会谈在阿布扎比开始举行</a></h4>
+<p class="desc">新一轮俄罗斯、美国和乌克兰三方会谈10日在阿联酋首都阿布扎比举行，这是今年2月谈判停滞以来时隔9个月重启面对面磋商；俄方由总统助理梅金斯基率领，美方包括特使威特科夫和库什纳，乌方包括对外情报局局长乌梅罗夫等</p>
+<p class="meta">来源：人民网（新华社）。发布时间：2026-11-10 17:18（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.ft.com/content/c2992864-c0ab-4e38-b47a-5c2c1e3cb056" target="_blank" rel="noopener noreferrer">US removes planes from second UK military base after Iran threat</a></h4>
+<p class="desc">据 FT RSS：在伊朗威胁后，美国从第二个英国军事基地撤走飞机。未能打开FT原文，仅按RSS标题与时间收录</p>
+<p class="meta">来源：Financial Times RSS。发布时间：2026-11-10 17:55（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.bbc.co.uk/news/articles/cmg474vk6dyqo" target="_blank" rel="noopener noreferrer">Iran rejects French claims it was behind supermarket fridge hacking</a></h4>
+<p class="desc">伊朗称，法国指认其与导致超市冷柜温度升高的网络攻击有关的说法「毫无根据且怀有敌意」；法国此前将一系列黑客攻击归咎于伊斯兰革命卫队</p>
+<p class="meta">来源：BBC。发布时间：2026-11-09 16:28 UTC，合北京时间2026-11-10 00:28</p>
+</article>
+<article class="item">
+<h4><a href="https://www.aljazeera.com/news/2026/11/10/three-workers-die-at-tatas-iphone-parts-plant-in-indias-tamil-nadu" target="_blank" rel="noopener noreferrer">Three workers die at Tata’s iPhone parts plant in India’s Tamil Nadu</a></h4>
+<p class="desc">印度泰米尔纳德邦塔塔电子工厂发生事故，3名工人被宣告不治</p>
+<p class="meta">来源：Al Jazeera。发布时间：2026-11-10 17:29（北京时间）</p>
+</article>
+</div>
+</section>
+<section class="section" id="sec-文化">
+<h2>文化</h2>
+<div class="subsection"><h3>国内</h3>
+<article class="item">
+<h4><a href="https://www.thepaper.cn/newsDetail_forward_34437550" target="_blank" rel="noopener noreferrer">《南京照相馆》获第39届中国电影金鸡奖最佳故事片奖</a></h4>
+<p class="desc">第39届中国电影金鸡奖颁奖典礼在厦门举行，《南京照相馆》获最佳故事片奖，导演申奥领奖</p>
+<p class="meta">来源：澎湃新闻。发布时间：2026-11-10 22:10（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.news.cn/politics/leaders/20261110/c197011abf4b410cab985daa97c9e3aa/c.html" target="_blank" rel="noopener noreferrer">习近平同志《论减贫脱贫》出版发行</a></h4>
+<p class="desc">中共中央党史和文献研究院编辑的习近平同志《论减贫脱贫》由中央文献出版社出版发行，收入相关重要文稿55篇，部分为首次公开发表</p>
+<p class="meta">来源：新华网。发布时间：2026-11-10 16:02（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.chinanews.com.cn/cul/2026/11-10/10729492.shtml" target="_blank" rel="noopener noreferrer">沪穗文博场馆联合办展纪念孙中山诞辰160周年</a></h4>
+<p class="desc">辛亥革命纪念馆与上海孙中山故居纪念馆联合举办的《和平 奋斗 救中国——孙中山北上文物文献图片展》10日在广州辛亥革命纪念馆对公众开放，展期至2027年4月11日</p>
+<p class="meta">来源：中新网。发布时间：2026-11-10 17:02（北京时间）</p>
+</article>
+</div>
+<div class="subsection"><h3>国际</h3>
+<article class="item">
+<h4><a href="https://world.people.com.cn/n1/2026/1110/c1002-40831501.html" target="_blank" rel="noopener noreferrer">外交部：大熊猫“平平”“福双”拉近中美人民心灵距离</a></h4>
+<p class="desc">外交部发言人郭嘉昆表示，很高兴看到大熊猫「平平」「福双」近日在美国亚特兰大动物园正式与公众见面；这对大熊猫于今年9月抵美</p>
+<p class="meta">来源：人民网（新华社）。发布时间：2026-11-10 20:32（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.bbc.co.uk/news/articles/cw0737kv52lko" target="_blank" rel="noopener noreferrer">Booker Prize 2026: M John Harrison&#x27;s &#x27;baffling but brilliant&#x27; novel The End of Everything wins</a></h4>
+<p class="desc">81岁的M·约翰·哈里森凭借末日题材小说《The End of Everything》获得2026年布克奖，成为该奖历史上最年长得主，奖金5万英镑</p>
+<p class="meta">来源：BBC。发布时间：2026-11-09 22:16 UTC，合北京时间2026-11-10 06:16</p>
+</article>
+<article class="item">
+<h4><a href="https://www.bbc.co.uk/news/articles/cmwyvydp2vz8o" target="_blank" rel="noopener noreferrer">Ioan Gruffudd says &#x27;explicit&#x27; images of him online are AI generated</a></h4>
+<p class="desc">好莱坞演员伊万·格拉法德提醒粉丝，网上以他形象出现的「露骨且令人不安」内容为人工智能生成，并呼吁不要向使用其肖像的人汇款</p>
+<p class="meta">来源：BBC。发布时间：2026-11-09 12:09 UTC，合北京时间2026-11-09 20:09</p>
+</article>
+</div>
+</section>
+<section class="section" id="sec-游戏">
+<h2>游戏</h2>
+<div class="subsection"><h3>国内</h3>
+<article class="item">
+<h4><a href="https://www.chuapp.com/article/291749.html" target="_blank" rel="noopener noreferrer">2026三角洲行动烽火世界杯11月27日开赛，全球六大赛区12支顶尖战队决战斯德哥尔摩</a></h4>
+<p class="desc">2026三角洲行动烽火世界杯将于11月27日至29日在瑞典斯德哥尔摩DreamHack举行，六大赛区12支战队争夺50万美元总奖金；这是该赛事继2025年杭州首届后首次走出亚洲</p>
+<p class="meta">来源：触乐。发布时间：2026-11-10 15:23（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.ithome.com/1/025/174.htm" target="_blank" rel="noopener noreferrer">育碧《舞力全开：传世金曲》登陆任天堂 Switch 2 平台：收录跨六十年金曲，5610 日元</a></h4>
+<p class="desc">育碧《舞力全开：传世金曲》（Just Dance: Decades of Hits）已登陆Switch 2，日服eShop定价5610日元，收录横跨六个十年的35首歌曲</p>
+<p class="meta">来源：IT之家。发布时间：2026-11-10 22:16（北京时间）</p>
+</article>
+</div>
+<div class="subsection"><h3>国际</h3>
+<article class="item">
+<h4><a href="https://www.eurogamer.net/steam-deck-framerate-average-data-store-widget" target="_blank" rel="noopener noreferrer">Steam now shows average Steam Deck framerates when browsing games, but Valve says it&#x27;s considering expanding the feature to other hardware</a></h4>
+<p class="desc">Steam在游戏商店的Steam Deck兼容性栏显示平均帧率，目前覆盖已通过Deck兼容性测试的游戏；Valve表示正考虑把该功能扩展到其他硬件</p>
+<p class="meta">来源：Eurogamer。发布时间：2026-11-10 21:53（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.eurogamer.net/the-legend-of-zelda-ocarina-of-time-switch-2-best-week-sales" target="_blank" rel="noopener noreferrer">Switch 2 US sales soar again thanks to The Legend of Zelda effect, as it enjoys its best week of the year so far</a></h4>
+<p class="desc">受《塞尔达传说：时之笛》重制版及40周年限定主机带动，任天堂Switch 2在美国录得今年迄今最佳一周销量</p>
+<p class="meta">来源：Eurogamer。发布时间：2026-11-10 17:25（北京时间）</p>
+</article>
+<article class="item">
+<h4><a href="https://www.eurogamer.net/gta-6-preorders-tracking-take-two-earnings-call" target="_blank" rel="noopener noreferrer">GTA 6 pre-orders are tracking &quot;well above expectations&quot; and the game will &quot;set a new baseline&quot; for Take-Two, says CEO Strauss Zelnick</a></h4>
+<p class="desc">Take-Two首席执行官斯特劳斯·泽尔尼克称，《GTA 6》预购表现「远超预期」，并表示该作将为公司「树立新的基准」</p>
+<p class="meta">来源：Eurogamer。发布时间：2026-11-10 06:02（北京时间）。  来源限定白名单，均为 48 小时内公开报道</p>
+</article>
+</div>
+</section>
+</div>
+    </main>
+    <footer>
+      <p>来源限定白名单，均为 48 小时内公开报道</p>
+    </footer>
+  </div>
+</body>
+</html>

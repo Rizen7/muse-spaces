@@ -1,0 +1,52 @@
+/* 首页样式。替换本文件即可换肤，保持下方类名不变。 */
+body {
+  background: #f5f5f3;
+  color: #1a1a1a;
+}
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+@media (min-width: 768px) {
+  .wrap { padding: 48px 32px; }
+}
+header h1 {
+  margin: 0 0 8px;
+  font-size: 1.7rem;
+}
+.lead { margin: 0 0 24px; color: #444; }
+
+.entries {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .entries { grid-template-columns: 1fr 1fr; gap: 24px; }
+}
+.card {
+  display: block;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  text-decoration: none;
+  color: inherit;
+}
+.card:hover { border-color: #888; }
+.card h2 { margin: 0 0 8px; font-size: 1.2rem; }
+.card p { margin: 0; color: #555; font-size: 14px; }
+.banner-sample {
+  display: inline-block;
+  margin: 0 0 16px;
+  padding: 2px 8px;
+  border: 1px solid #b45309;
+  color: #9a3412;
+  background: #fff7ed;
+  font-size: 13px;
+}
+footer {
+  margin-top: 32px;
+  color: #888;
+  font-size: 13px;
+}

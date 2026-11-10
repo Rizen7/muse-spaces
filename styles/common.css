@@ -1,0 +1,11 @@
+/* 公共基础样式。换皮肤时一般保留本文件，改 news.css / deals.css / index.css。 */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans CJK SC", "Noto Sans SC",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+a { color: inherit; }
+img { max-width: 100%; height: auto; }

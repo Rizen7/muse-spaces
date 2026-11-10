@@ -1,0 +1,127 @@
+/* 资讯页样式。替换本文件即可换肤，保持下方类名不变。 */
+@import url("common.css"); /* 仅作说明：实际由 render.py 先内联 common.css 再内联本文件，不会在浏览器里 @import。 */
+
+body {
+  background: #f5f5f3;
+  color: #1a1a1a;
+}
+.wrap {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px;
+}
+@media (min-width: 768px) {
+  .wrap { padding: 24px 32px; }
+}
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin: 0 0 16px;
+  font-size: 14px;
+}
+.site-nav a { color: #333; text-decoration: none; }
+.site-nav a:hover { text-decoration: underline; }
+.site-nav a.current { font-weight: 700; }
+
+header h1 {
+  margin: 0 0 8px;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+.banner-sample {
+  display: inline-block;
+  margin: 0 0 8px;
+  padding: 2px 8px;
+  border: 1px solid #b45309;
+  color: #9a3412;
+  background: #fff7ed;
+  font-size: 13px;
+}
+.updated {
+  margin: 0 0 8px;
+  color: #444;
+  font-size: 14px;
+}
+.status-partial {
+  margin: 0 0 12px;
+  color: #9a3412;
+  font-size: 14px;
+}
+.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 20px;
+  padding: 0;
+  list-style: none;
+}
+.toc a {
+  display: inline-block;
+  padding: 6px 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  text-decoration: none;
+  font-size: 14px;
+  color: #222;
+}
+.toc a:hover { border-color: #888; }
+
+.sections {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .sections { grid-template-columns: 1fr 1fr; gap: 20px; }
+}
+@media (min-width: 1200px) {
+  .sections { grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+}
+
+.section {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 16px;
+}
+.section h2 {
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #222;
+  font-size: 1.15rem;
+}
+.subsection { margin-bottom: 16px; }
+.subsection:last-child { margin-bottom: 0; }
+.subsection h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #555;
+  letter-spacing: 0.04em;
+}
+.item { margin: 0 0 14px; padding-bottom: 14px; border-bottom: 1px solid #eee; }
+.item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
+.item h4 { margin: 0 0 6px; font-size: 16px; line-height: 1.45; font-weight: 700; }
+.item h4 a { text-decoration: none; color: #111; }
+.item h4 a:hover { text-decoration: underline; }
+.item .desc { margin: 0 0 6px; font-size: 14px; color: #333; }
+.item .meta { margin: 0; font-size: 12px; color: #666; }
+.empty { margin: 0; color: #888; font-size: 14px; }
+
+.fail-panel {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 32px 16px;
+  text-align: center;
+  font-size: 1.25rem;
+  color: #9a3412;
+}
+
+footer {
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid #ddd;
+  color: #666;
+  font-size: 13px;
+}
+footer p { margin: 0; }

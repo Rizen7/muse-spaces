@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>公开资讯页</title>
+  <style>/* 公共基础样式。换皮肤时一般保留本文件，改 news.css / deals.css / index.css。 */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans CJK SC", "Noto Sans SC",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+a { color: inherit; }
+img { max-width: 100%; height: auto; }
+
+/* 首页样式。替换本文件即可换肤，保持下方类名不变。 */
+body {
+  background: #f5f5f3;
+  color: #1a1a1a;
+}
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+@media (min-width: 768px) {
+  .wrap { padding: 48px 32px; }
+}
+header h1 {
+  margin: 0 0 8px;
+  font-size: 1.7rem;
+}
+.lead { margin: 0 0 24px; color: #444; }
+
+.entries {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .entries { grid-template-columns: 1fr 1fr; gap: 24px; }
+}
+.card {
+  display: block;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  text-decoration: none;
+  color: inherit;
+}
+.card:hover { border-color: #888; }
+.card h2 { margin: 0 0 8px; font-size: 1.2rem; }
+.card p { margin: 0; color: #555; font-size: 14px; }
+.banner-sample {
+  display: inline-block;
+  margin: 0 0 16px;
+  padding: 2px 8px;
+  border: 1px solid #b45309;
+  color: #9a3412;
+  background: #fff7ed;
+  font-size: 13px;
+}
+footer {
+  margin-top: 32px;
+  color: #888;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>公开资讯页</h1>
+      <p class="banner-sample">试跑样例</p>
+
+      <p class="lead">手机和电脑都可以直接打开，不用登录。</p>
+    </header>
+    <main class="entries">
+      <a class="card" href="news/">
+        <h2>国内外资讯</h2>
+        <p>AI、科技、经济、社会、文化、游戏，按国内 / 国际分栏。</p>
+      </a>
+      <a class="card" href="deals/">
+        <h2>薅羊毛</h2>
+        <p>白嫖、限免、低价、币圈空投、NFT。</p>
+      </a>
+    </main>
+    <footer>
+      <p>由公开报道整理，仅供查阅。</p>
+    </footer>
+  </div>
+</body>
+</html>

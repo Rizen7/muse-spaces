@@ -1,0 +1,137 @@
+/* 薅羊毛页样式（简洁像素板）。替换本文件即可换肤，保持下方类名不变。 */
+body {
+  background: #16141a;
+  color: #efe7d1;
+  font-family: "Noto Sans Mono CJK SC", "Noto Sans Mono", ui-monospace, SFMono-Regular,
+    Menlo, Consolas, "Liberation Mono", "PingFang SC", "Microsoft YaHei", monospace;
+}
+.wrap {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px;
+}
+@media (min-width: 768px) {
+  .wrap { padding: 24px 32px; }
+}
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin: 0 0 16px;
+  font-size: 13px;
+}
+.site-nav a { color: #d4c9a4; text-decoration: none; }
+.site-nav a:hover { text-decoration: underline; }
+.site-nav a.current { color: #f0d778; font-weight: 700; }
+
+header h1 {
+  margin: 0 0 8px;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #f0d778;
+  letter-spacing: 0.04em;
+}
+.kicker {
+  margin: 0 0 4px;
+  font-size: 12px;
+  color: #a89868;
+  letter-spacing: 0.12em;
+}
+.banner-sample {
+  display: inline-block;
+  margin: 0 0 8px;
+  padding: 2px 8px;
+  border: 2px solid #f0d778;
+  color: #f0d778;
+  font-size: 13px;
+}
+.updated {
+  margin: 0 0 8px;
+  color: #d4c9a4;
+  font-size: 13px;
+}
+.status-partial {
+  margin: 0 0 12px;
+  color: #ffb14a;
+  font-size: 13px;
+}
+
+.boards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .boards { grid-template-columns: 1fr 1fr; gap: 18px; }
+}
+@media (min-width: 1100px) {
+  .boards { grid-template-columns: 1fr 1fr 1fr; }
+}
+@media (min-width: 1360px) {
+  .boards { grid-template-columns: repeat(5, 1fr); }
+}
+
+.board {
+  border: 3px solid #c9a227;
+  background: #1d1b24;
+  padding: 12px;
+  box-shadow: 4px 4px 0 #050508;
+}
+.board h2 {
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #c9a227;
+  font-size: 1rem;
+  color: #f0d778;
+}
+
+.item {
+  margin: 0 0 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #3a362c;
+}
+.item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
+.item h3 { margin: 0 0 6px; font-size: 15px; line-height: 1.45; }
+.item h3 a { color: #fff4cc; text-decoration: none; }
+.item h3 a:hover { text-decoration: underline; }
+.item .desc { margin: 0 0 8px; font-size: 13px; color: #ddd6bf; }
+.fields { margin: 0; font-size: 12px; }
+.fields div { margin: 0 0 4px; }
+.fields dt {
+  display: inline;
+  color: #a89868;
+  font-weight: 700;
+}
+.fields dd { display: inline; margin: 0; color: #efe7d1; }
+.item .source { margin: 6px 0 0; font-size: 12px; color: #a89868; }
+
+.risk {
+  display: inline-block;
+  margin: 0 0 8px;
+  padding: 3px 8px;
+  background: #d10f0f;
+  color: #fff;
+  font-weight: 700;
+  border: 2px solid #ff6b6b;
+  letter-spacing: 0.04em;
+}
+.risk-reason { display: block; margin: 0 0 8px; font-size: 12px; color: #ffb4b4; }
+.empty { margin: 0; color: #8a8370; font-size: 13px; }
+
+.fail-panel {
+  border: 3px solid #c9a227;
+  background: #1d1b24;
+  padding: 32px 16px;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #ffb14a;
+}
+
+footer {
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 2px solid #3a362c;
+  color: #8a8370;
+  font-size: 12px;
+}
+footer p { margin: 0; }
