@@ -133,8 +133,8 @@ def split_items(block_lines: list[str]) -> list[tuple[str, str]]:
             elif line.strip() == "":
                 continue
             else:
-                # 非缩进且非新条目，当作正文续行
-                body.append(line)
+                # 非缩进行结束本条，避免把文末说明写进最后一条
+                flush()
     flush()
     return items
 
