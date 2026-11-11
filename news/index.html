@@ -533,6 +533,18 @@ html { scroll-behavior: smooth; }
   letter-spacing: .04em;
 }
 .back-to-hot:hover { border-color: var(--mint); color: var(--mint); }
+
+/* 展开后：顶部「更多」按钮收起不占位，底部显示「收起」（仅 JS 可用时；无 JS 时仍用顶部按钮收起） */
+.collapse-btn { display: none; }
+.js .more-box[open] > summary {
+  min-height: 0; height: 0; padding: 0; margin: 0; border: 0; overflow: hidden; opacity: 0;
+}
+.js .more-box[open] .collapse-btn {
+  display: flex; align-items: center; justify-content: center; width: 100%;
+  min-height: 44px; margin-top: 12px; padding: 8px 14px; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--card);
+  color: var(--text); font-size: 15px; font-weight: 600; font-family: inherit;
+}
 </style>
 </head>
 <body>
@@ -670,6 +682,7 @@ html { scroll-behavior: smooth; }
 </div>
 </article>
 </div>
+<button type="button" class="collapse-btn">收起</button>
 </details>
 </section>
 <section id="sec-科技">
@@ -756,6 +769,7 @@ html { scroll-behavior: smooth; }
 </div>
 </article>
 </div>
+<button type="button" class="collapse-btn">收起</button>
 </details>
 </section>
 <section id="sec-经济">
@@ -842,6 +856,7 @@ html { scroll-behavior: smooth; }
 </div>
 </article>
 </div>
+<button type="button" class="collapse-btn">收起</button>
 </details>
 </section>
 <section id="sec-社会">
@@ -928,6 +943,7 @@ html { scroll-behavior: smooth; }
 </div>
 </article>
 </div>
+<button type="button" class="collapse-btn">收起</button>
 </details>
 </section>
 <section id="sec-文化">
@@ -994,6 +1010,7 @@ html { scroll-behavior: smooth; }
 </div>
 </article>
 </div>
+<button type="button" class="collapse-btn">收起</button>
 </details>
 </section>
 <section id="sec-游戏">
@@ -1061,6 +1078,7 @@ html { scroll-behavior: smooth; }
 </div>
 </article>
 </div>
+<button type="button" class="collapse-btn">收起</button>
 </details>
 </section>
 </div>
@@ -1071,6 +1089,21 @@ html { scroll-behavior: smooth; }
   </div>
   <a class="back-to-hot" href="#hot" aria-label="回到热门"><span class="back-to-hot-arrow" aria-hidden="true">↑</span><span class="back-to-hot-label">热门</span></a>
   <script>
+  (function () {
+    document.documentElement.classList.add("js");
+    var boxes = document.querySelectorAll(".more-box");
+    for (var i = 0; i < boxes.length; i++) {
+      (function (box) {
+        var c = box.querySelector(".collapse-btn");
+        if (!c) return;
+        c.addEventListener("click", function () {
+          box.open = false;
+          var sm = box.querySelector("summary");
+          if (sm && sm.scrollIntoView) sm.scrollIntoView({ block: "center" });
+        });
+      })(boxes[i]);
+    }
+  })();
   (function () {
     var btn = document.querySelector(".back-to-hot");
     var hot = document.querySelector(".hot-zone");
