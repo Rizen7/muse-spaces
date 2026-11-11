@@ -789,6 +789,7 @@ def render_news_content(data: dict, out_path: Path | None = None) -> tuple[str, 
                 iid = make_item_id(sec, raw_title, body)
                 parts.append(render_item_news(raw_title, body, sec, sub, iid, out_path))
             parts.append("</div>")
+            parts.append('<button type="button" class="collapse-btn">收起</button>')
             parts.append("</details>")
 
         parts.append("</section>")

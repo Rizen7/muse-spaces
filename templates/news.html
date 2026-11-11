@@ -32,6 +32,21 @@
   <a class="back-to-hot" href="#hot" aria-label="回到热门"><span class="back-to-hot-arrow" aria-hidden="true">↑</span><span class="back-to-hot-label">热门</span></a>
   <script>
   (function () {
+    document.documentElement.classList.add("js");
+    var boxes = document.querySelectorAll(".more-box");
+    for (var i = 0; i < boxes.length; i++) {
+      (function (box) {
+        var c = box.querySelector(".collapse-btn");
+        if (!c) return;
+        c.addEventListener("click", function () {
+          box.open = false;
+          var sm = box.querySelector("summary");
+          if (sm && sm.scrollIntoView) sm.scrollIntoView({ block: "center" });
+        });
+      })(boxes[i]);
+    }
+  })();
+  (function () {
     var btn = document.querySelector(".back-to-hot");
     var hot = document.querySelector(".hot-zone");
     if (!btn || !hot || !("IntersectionObserver" in window)) return;
