@@ -387,6 +387,152 @@ footer p { margin: 0; }
   line-height: 1.7;
 }
 .feat-item .item-foot { width: 100%; }
+
+
+/* ── v2 热门区 / 混排 / 折叠 / 配图 ── */
+html { scroll-behavior: smooth; }
+.wrap { padding-bottom: 120px; }
+@media (max-width: 700px) {
+  .wrap { padding-bottom: 120px; }
+  .item-foot { padding-right: 60px; }
+}
+
+.hot-zone {
+  margin: 0 0 20px;
+  padding: 18px 16px 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+.hot-title {
+  margin: 0 0 14px;
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+.hot-group { margin: 0 0 10px; }
+.hot-sec {
+  font-size: 12px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 4px;
+  font-weight: 700;
+}
+.hot-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.hot-list li + li { margin-top: 10px; }
+.hot-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex-wrap: nowrap;
+  min-height: 44px;
+  padding: 6px 2px;
+  color: var(--text);
+  text-decoration: none;
+}
+.hot-link .badges { flex: 0 0 auto; margin-top: 2px; }
+.hot-link:hover .hot-text { color: var(--mint); }
+.hot-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+  font-weight: 650;
+}
+.hot-anchor { height: 0; overflow: hidden; }
+
+/* 标题旁国内/国际徽章（沿用原分区配色，保证对比度） */
+.badge-domestic { background: #0f3d34; color: var(--mint); }
+.badge-intl { background: #3d2f0c; color: var(--gold); }
+
+.item { scroll-margin-top: 16px; }
+.item:target {
+  border-color: rgba(62,240,200,.7);
+  box-shadow: 0 0 0 3px rgba(62,240,200,.35);
+  animation: target-flash 1.8s ease;
+}
+@keyframes target-flash {
+  0% { box-shadow: 0 0 0 6px rgba(62,240,200,.55); }
+  100% { box-shadow: 0 0 0 3px rgba(62,240,200,.35); }
+}
+
+.item-img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 0 0 10px;
+  display: block;
+  object-fit: cover;
+}
+
+.more-box { margin-top: 12px; }
+.more-box summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 14px;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  list-style: none;
+}
+.more-box summary::-webkit-details-marker,
+.more-box summary::marker { display: none; content: ""; }
+.more-box[open] summary { margin-bottom: 12px; }
+.more-box .item-grid { margin-top: 0; }
+
+.back-to-hot {
+  position: fixed;
+  right: 16px;
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 4px 0 3px;
+  border-radius: 50%;
+  background: rgba(26, 29, 40, 0.72);
+  border: 1px solid rgba(255,255,255,.28);
+  color: #f5f7fb;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  line-height: 1;
+}
+.back-to-hot[hidden] { display: none !important; }
+.back-to-hot-arrow {
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 700;
+}
+.back-to-hot-label {
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+.back-to-hot:hover { border-color: var(--mint); color: var(--mint); }
 </style>
 </head>
 <body>
@@ -400,480 +546,522 @@ footer p { margin: 0; }
       <div class="pill"><span class="pill-dot"></span>已核实 · 11-11 06:51 北京时间</div>
     </header>
     
+    <section id="hot" class="hot-zone">
+<h2 class="hot-title">今日热门</h2>
+<div class="hot-group">
+<h3 class="hot-sec">AI</h3>
+<ul class="hot-list">
+<li><a class="hot-link" href="#item-91840f3dae7b"><span class="badges"><span class="badge badge-important">重要</span></span><span class="hot-text">谷歌 Gemini 4 Carbon 正式上线</span></a></li>
+<li><a class="hot-link" href="#item-69725801871d"><span class="badges"><span class="badge badge-important">重要</span></span><span class="hot-text">纽约州 AI 安全法生效，OpenAI、Anthropic 面临新监管</span></a></li>
+<li><a class="hot-link" href="#item-65c788148c69"><span class="badges"><span class="badge badge-useful">实用</span></span><span class="hot-text">MiniMax 开源 H3-Image 生图模型，10 秒就能生成一张 4K 图像</span></a></li>
+</ul></div>
+<div class="hot-group">
+<h3 class="hot-sec">科技</h3>
+<ul class="hot-list">
+<li><a class="hot-link" href="#item-9275e7fcf27b"><span class="badges"><span class="badge badge-hot">热门</span></span><span class="hot-text">英伟达聘请纽约大律所调查黄仁勋婚外情事件</span></a></li>
+</ul></div>
+<div class="hot-group">
+<h3 class="hot-sec">经济</h3>
+<ul class="hot-list">
+<li><a class="hot-link" href="#item-5665c421465c"><span class="badges"><span class="badge badge-important">重要</span><span class="badge badge-hot">热门</span></span><span class="hot-text">Anthropic 冲刺 1.4 万亿美元估值上市</span></a></li>
+<li><a class="hot-link" href="#item-d978d20c7ef9"><span class="badges"><span class="badge badge-important">重要</span></span><span class="hot-text">美联储高官考虑 2022 年以来最大幅度加息</span></a></li>
+</ul></div>
+<div class="hot-group">
+<h3 class="hot-sec">社会</h3>
+<ul class="hot-list">
+<li><a class="hot-link" href="#item-d3e7b4374d54"><span class="badges"><span class="badge badge-important">重要</span></span><span class="hot-text">美国要求 GLP-1 类药物加注可致失明的罕见眼病警示</span></a></li>
+<li><a class="hot-link" href="#item-050829af06f0"><span class="badges"><span class="badge badge-useful">实用</span></span><span class="hot-text">中国官方批复“700”专用码号试点 点外卖将隐藏真实手机号</span></a></li>
+</ul></div>
+<div class="hot-group">
+<h3 class="hot-sec">文化</h3>
+<ul class="hot-list">
+<li><a class="hot-link" href="#item-b26f60a91bfe"><span class="badges"><span class="badge badge-hot">热门</span></span><span class="hot-text">第 39 届中国电影金鸡奖全名单公布，《浪浪山小妖怪》《窗外是蓝星》《给阿嬷的情书》等获奖</span></a></li>
+</ul></div>
+<div class="hot-group">
+<h3 class="hot-sec">游戏</h3>
+<ul class="hot-list">
+<li><a class="hot-link" href="#item-cd8a0be0580f"><span class="badges"><span class="badge badge-hot">热门</span></span><span class="hot-text">《GTA 6》成为 PlayStation 商店史上预购量最高的游戏</span></a></li>
+</ul></div>
+</section>
     <nav class="sec-nav"><a href="#sec-AI">AI</a><a href="#sec-科技">科技</a><a href="#sec-经济">经济</a><a href="#sec-社会">社会</a><a href="#sec-文化">文化</a><a href="#sec-游戏">游戏</a></nav>
     <main>
       <div class="sections">
 <section id="sec-AI">
 <div class="section-header">AI Channel</div>
-<div class="subsection">
-<article class="feat-item" data-tags="useful">
-<div class="item-tag">AI · 国内</div>
-<span class="badges"><span class="badge badge-useful">实用</span></span>
+<div class="item-grid">
+<article class="item" id="item-91840f3dae7b" data-tags="important">
+<span class="badges"><span class="badge badge-intl">国际</span><span class="badge badge-important">重要</span></span>
+<h4><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/" target="_blank" rel="noopener noreferrer">谷歌 Gemini 4 Carbon 正式上线</a></h4>
+<p class="title-en">Gemini 4 Carbon is now available</p>
+<p class="desc">谷歌宣布 Gemini 4 Carbon 向开发者、企业、科研人员和普通用户开放，这是谷歌新一代主力大模型的全面铺开</p>
+<div class="item-foot">
+<span class="source-time">Google 官方博客 · 11-11 00:00</span>
+<a class="open-link" href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/" target="_blank" rel="noopener noreferrer">看原文</a>
+</div>
+</article>
+<article class="item" id="item-69725801871d" data-tags="important">
+<span class="badges"><span class="badge badge-intl">国际</span><span class="badge badge-important">重要</span></span>
+<h4><a href="https://techcrunch.com/2026/11/10/openai-anthropic-face-new-oversight-as-new-yorks-ai-safety-law-takes-effect/" target="_blank" rel="noopener noreferrer">纽约州 AI 安全法生效，OpenAI、Anthropic 面临新监管</a></h4>
+<p class="title-en">OpenAI, Anthropic face new oversight as New York’s AI safety law takes effect</p>
+<p class="desc">纽约州开始执行其 AI 安全法，要求 OpenAI、Anthropic 等大型模型开发商登记、公开安全做法并上报重大事故，否则面临罚款，是美国州层面较严格的 AI 监管落地</p>
+<div class="item-foot">
+<span class="source-time">TechCrunch · 11-11 04:52</span>
+<a class="open-link" href="https://techcrunch.com/2026/11/10/openai-anthropic-face-new-oversight-as-new-yorks-ai-safety-law-takes-effect/" target="_blank" rel="noopener noreferrer">看原文</a>
+</div>
+</article>
+<article class="item" id="item-65c788148c69" data-tags="useful">
+<span class="badges"><span class="badge badge-domestic">国内</span><span class="badge badge-useful">实用</span></span>
 <h4><a href="https://www.ithome.com/1/025/191.htm" target="_blank" rel="noopener noreferrer">MiniMax 开源 H3-Image 生图模型，10 秒就能生成一张 4K 图像</a></h4>
 <p class="desc">MiniMax 开源生图模型 H3-Image，可在 10 秒内生成约 4096×4096 像素（约 1600 万像素）的图像，并支持多参考图理解，开发者可直接拿来用</p>
 <div class="item-foot">
 <span class="source-time">IT之家 · 11-10 23:25</span>
-<a class="open-link" href="https://www.ithome.com/1/025/191.htm" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.ithome.com/1/025/191.htm" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
+</div>
+<details class="more-box">
+<summary>更多 AI 资讯（5）</summary>
 <div class="item-grid">
-<article class="item" data-tags="">
-<div class="item-tag">AI · 国内</div>
+<article class="item" id="item-eaf8b4b02657" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.ithome.com/1/025/154.htm" target="_blank" rel="noopener noreferrer">我国算力总规模达 310 万 PFLOPS，位居世界第二</a></h4>
 <p class="desc">全国数据标准化技术委员会在厦门举行的「标准周」活动上公布，我国算力总规模已达 310 万 PFLOPS、居世界第二，算力是大模型训练和应用的底座</p>
 <div class="item-foot">
 <span class="source-time">IT之家 · 11-10 21:21</span>
-<a class="open-link" href="https://www.ithome.com/1/025/154.htm" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.ithome.com/1/025/154.htm" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">AI · 国内</div>
+<article class="item" id="item-c861c8775729" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.qbitai.com/2026/11/508998.html" target="_blank" rel="noopener noreferrer">Agent自演进驶入“双轨时代”！openJiuwen首发TTSE经验学习框架</a></h4>
 <p class="desc">openJiuwen 发布 TTSE 经验学习框架，让智能体（Agent）在换了文件、格式和环境后能借助过往任务经验调整做法，针对的是同样流程换个环境就频繁返工的问题</p>
 <div class="item-foot">
 <span class="source-time">量子位 · 11-10 15:56</span>
-<a class="open-link" href="https://www.qbitai.com/2026/11/508998.html" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.qbitai.com/2026/11/508998.html" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">AI · 国内</div>
+<article class="item" id="item-f6bc6b1ed02f" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.qbitai.com/2026/11/508991.html" target="_blank" rel="noopener noreferrer">成立四个月，融资过亿美金：TensorWorld物原科技要跑通“物理真实”路线</a></h4>
 <p class="desc">成立仅四个月的 TensorWorld 物原科技已拿到过亿美元融资，主打「物理真实」路线，显示资本仍在押注面向物理世界的 AI 创业公司</p>
 <div class="item-foot">
 <span class="source-time">量子位 · 11-10 15:50</span>
-<a class="open-link" href="https://www.qbitai.com/2026/11/508991.html" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.qbitai.com/2026/11/508991.html" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-</div>
-</div>
-<div class="subsection">
-<div class="item-grid">
-<article class="item" data-tags="important">
-<div class="item-tag intl">AI · 国际</div>
-<span class="badges"><span class="badge badge-important">重要</span></span>
-<h4><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/" target="_blank" rel="noopener noreferrer">谷歌 Gemini 4 Carbon 正式上线</a></h4>
-<p class="title-en">Gemini 4 Carbon is now available 谷歌宣布 Gemini 4 Carbon 向开发者、企业、科研人员和普通用户开放，这是谷歌新一代主力大模型的全面铺开</p>
-<div class="item-foot">
-<span class="source-time">Google 官方博客 · 11-11 00:00</span>
-<a class="open-link" href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/" target="_blank" rel="noopener noreferrer">打开原文 →</a>
-</div>
-</article>
-<article class="item" data-tags="important">
-<div class="item-tag intl">AI · 国际</div>
-<span class="badges"><span class="badge badge-important">重要</span></span>
-<h4><a href="https://techcrunch.com/2026/11/10/openai-anthropic-face-new-oversight-as-new-yorks-ai-safety-law-takes-effect/" target="_blank" rel="noopener noreferrer">纽约州 AI 安全法生效，OpenAI、Anthropic 面临新监管</a></h4>
-<p class="title-en">OpenAI, Anthropic face new oversight as New York’s AI safety law takes effect 纽约州开始执行其 AI 安全法，要求 OpenAI、Anthropic 等大型模型开发商登记、公开安全做法并上报重大事故，否则面临罚款，是美国州层面较严格的 AI 监管落地</p>
-<div class="item-foot">
-<span class="source-time">TechCrunch · 11-11 04:52</span>
-<a class="open-link" href="https://techcrunch.com/2026/11/10/openai-anthropic-face-new-oversight-as-new-yorks-ai-safety-law-takes-effect/" target="_blank" rel="noopener noreferrer">打开原文 →</a>
-</div>
-</article>
-<article class="item" data-tags="">
-<div class="item-tag intl">AI · 国际</div>
+<article class="item" id="item-5ab2716b7c60" data-tags="">
+<span class="badges"><span class="badge badge-intl">国际</span></span>
 <h4><a href="https://techcrunch.com/2026/11/10/anthropic-launches-claude-meetings-to-turn-workplace-discussions-into-plans-and-tasks/" target="_blank" rel="noopener noreferrer">Anthropic 推出 Claude Meetings，把会议讨论变成计划和任务</a></h4>
-<p class="title-en">Anthropic launches Claude Meetings to turn workplace discussions into plans and tasks Anthropic 推出 Claude Meetings：开会时 Claude 可边听边起草方案、在白板上画时间线、回答会议聊天里的问题，并从已连接的办公应用里调取资料</p>
+<p class="title-en">Anthropic launches Claude Meetings to turn workplace discussions into plans and tasks</p>
+<p class="desc">Anthropic 推出 Claude Meetings：开会时 Claude 可边听边起草方案、在白板上画时间线、回答会议聊天里的问题，并从已连接的办公应用里调取资料</p>
 <div class="item-foot">
 <span class="source-time">TechCrunch · 11-11 01:30</span>
-<a class="open-link" href="https://techcrunch.com/2026/11/10/anthropic-launches-claude-meetings-to-turn-workplace-discussions-into-plans-and-tasks/" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://techcrunch.com/2026/11/10/anthropic-launches-claude-meetings-to-turn-workplace-discussions-into-plans-and-tasks/" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag intl">AI · 国际</div>
+<article class="item" id="item-cd0276777f7f" data-tags="">
+<span class="badges"><span class="badge badge-intl">国际</span></span>
 <h4><a href="https://techcrunch.com/2026/11/10/openai-acquires-odessia-travel-startup-created-by-sonder-founder/" target="_blank" rel="noopener noreferrer">OpenAI 收购 Sonder 创始人创办的旅行初创公司 Odessia</a></h4>
-<p class="title-en">OpenAI acquires Odessia, travel startup created by Sonder founder OpenAI 收购旅行初创公司 Odessia，其创始人是 Sonder 创始人 Francis Davidson；OpenAI 尚未公布旅行业务计划，但这显示其在探索 AI 旅行助手方向</p>
+<p class="title-en">OpenAI acquires Odessia, travel startup created by Sonder founder</p>
+<p class="desc">OpenAI 收购旅行初创公司 Odessia，其创始人是 Sonder 创始人 Francis Davidson；OpenAI 尚未公布旅行业务计划，但这显示其在探索 AI 旅行助手方向</p>
 <div class="item-foot">
 <span class="source-time">TechCrunch · 11-11 05:08</span>
-<a class="open-link" href="https://techcrunch.com/2026/11/10/openai-acquires-odessia-travel-startup-created-by-sonder-founder/" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://techcrunch.com/2026/11/10/openai-acquires-odessia-travel-startup-created-by-sonder-founder/" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
 </div>
-</div>
+</details>
 </section>
 <section id="sec-科技">
 <div class="section-header">Tech Channel</div>
-<div class="subsection">
 <div class="item-grid">
-<article class="item" data-tags="">
-<div class="item-tag">科技 · 国内</div>
+<article class="item" id="item-9275e7fcf27b" data-tags="hot">
+<span class="badges"><span class="badge badge-intl">国际</span><span class="badge badge-hot">热门</span></span>
+<h4><a href="https://www.bbc.co.uk/news/articles/ck1wvwwl3x0go" target="_blank" rel="noopener noreferrer">英伟达聘请纽约大律所调查黄仁勋婚外情事件</a></h4>
+<p class="title-en">Nvidia hires major New York law firm to investigate Jensen Huang affair</p>
+<p class="desc">据 BBC 报道，英伟达已聘请纽约大型律所调查 CEO 黄仁勋（Jensen Huang）与一名据称为中国间谍的女子的婚外情事件，此事已影响公司股价和领导层稳定</p>
+<div class="item-foot">
+<span class="source-time">BBC · 11-11 04:03</span>
+<a class="open-link" href="https://www.bbc.co.uk/news/articles/ck1wvwwl3x0go" target="_blank" rel="noopener noreferrer">看原文</a>
+</div>
+</article>
+</div>
+<details class="more-box">
+<summary>更多科技资讯（7）</summary>
+<div class="item-grid">
+<article class="item" id="item-2ab91499b333" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.ithome.com/1/025/147.htm" target="_blank" rel="noopener noreferrer">阿里巴巴：拟分拆平头哥于香港联交所主板独立上市</a></h4>
 <p class="desc">阿里巴巴公告称港交所已确认其可分拆芯片子公司平头哥，平头哥已于 2026 年 9 月 11 日以保密形式递交 H 股上市申请，国产芯片资产将独立融资</p>
 <div class="item-foot">
 <span class="source-time">IT之家 · 11-10 20:52</span>
-<a class="open-link" href="https://www.ithome.com/1/025/147.htm" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.ithome.com/1/025/147.htm" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">科技 · 国内</div>
+<article class="item" id="item-1049d5c19e66" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.chinanews.com.cn/gn/2026/11-10/10729849.shtml" target="_blank" rel="noopener noreferrer">中国深部岩芯钻探最大深度提升至7000米级</a></h4>
 <p class="desc">山东省地矿局称，国内地矿领域首台全自动化钻机 ZJ50DB/XD70DB 已在四川甘孜投用，把我国深部岩芯钻探最大深度提升到 7000 米级</p>
 <div class="item-foot">
 <span class="source-time">中新网 · 11-10 22:10</span>
-<a class="open-link" href="https://www.chinanews.com.cn/gn/2026/11-10/10729849.shtml" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.chinanews.com.cn/gn/2026/11-10/10729849.shtml" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">科技 · 国内</div>
+<article class="item" id="item-f33ba6218f46" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.ithome.com/1/025/146.htm" target="_blank" rel="noopener noreferrer">升腾资讯 × 华为全球首发“双旗舰新品”：鸿蒙 HarmonyOS 台式机 + 笔记本，均搭载麒麟 X90 芯片</a></h4>
 <p class="desc">升腾资讯联合华为发布台式机「升华 P270」和笔记本「升华 M270」，均搭载麒麟 X90 处理器和鸿蒙系统，鸿蒙电脑产品线继续扩充</p>
 <div class="item-foot">
 <span class="source-time">IT之家 · 11-10 20:50</span>
-<a class="open-link" href="https://www.ithome.com/1/025/146.htm" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.ithome.com/1/025/146.htm" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">科技 · 国内</div>
+<article class="item" id="item-1b191d09d163" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.ithome.com/1/025/159.htm" target="_blank" rel="noopener noreferrer">荣耀 CEO 李健官宣 Magic9 系列旗舰手机销量突破 50 万台，称还有更多惊喜将揭晓</a></h4>
 <p class="desc">荣耀 CEO 李健宣布 Magic9 系列累计销量突破 50 万台，并预告该系列还有新消息，国产高端机竞争仍在升温</p>
 <div class="item-foot">
 <span class="source-time">IT之家 · 11-10 21:32</span>
-<a class="open-link" href="https://www.ithome.com/1/025/159.htm" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.ithome.com/1/025/159.htm" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-</div>
-</div>
-<div class="subsection">
-<div class="item-grid">
-<article class="item" data-tags="hot">
-<div class="item-tag intl">科技 · 国际</div>
-<span class="badges"><span class="badge badge-hot">热门</span></span>
-<h4><a href="https://www.bbc.co.uk/news/articles/ck1wvwwl3x0go" target="_blank" rel="noopener noreferrer">英伟达聘请纽约大律所调查黄仁勋婚外情事件</a></h4>
-<p class="title-en">Nvidia hires major New York law firm to investigate Jensen Huang affair 据 BBC 报道，英伟达已聘请纽约大型律所调查 CEO 黄仁勋（Jensen Huang）与一名据称为中国间谍的女子的婚外情事件，此事已影响公司股价和领导层稳定</p>
-<div class="item-foot">
-<span class="source-time">BBC · 11-11 04:03</span>
-<a class="open-link" href="https://www.bbc.co.uk/news/articles/ck1wvwwl3x0go" target="_blank" rel="noopener noreferrer">打开原文 →</a>
-</div>
-</article>
-<article class="item" data-tags="">
-<div class="item-tag intl">科技 · 国际</div>
+<article class="item" id="item-bca5a7423777" data-tags="">
+<span class="badges"><span class="badge badge-intl">国际</span></span>
 <h4><a href="https://techcrunch.com/2026/11/10/pixel-tag-googles-30-android-ready-answer-to-apples-airtag-is-now-available/" target="_blank" rel="noopener noreferrer">谷歌 Pixel Tag 上市：30 美元的安卓版 AirTag</a></h4>
-<p class="title-en">Pixel Tag, Google&#x27;s $30 Android-ready answer to Apple&#x27;s AirTag, is now available 谷歌开售 30 美元的 Pixel Tag 防丢器，安卓用户可像用苹果 AirTag 一样定位丢失物品</p>
+<p class="title-en">Pixel Tag, Google&#x27;s $30 Android-ready answer to Apple&#x27;s AirTag, is now available</p>
+<p class="desc">谷歌开售 30 美元的 Pixel Tag 防丢器，安卓用户可像用苹果 AirTag 一样定位丢失物品</p>
 <div class="item-foot">
 <span class="source-time">TechCrunch · 11-11 02:49</span>
-<a class="open-link" href="https://techcrunch.com/2026/11/10/pixel-tag-googles-30-android-ready-answer-to-apples-airtag-is-now-available/" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://techcrunch.com/2026/11/10/pixel-tag-googles-30-android-ready-answer-to-apples-airtag-is-now-available/" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag intl">科技 · 国际</div>
+<article class="item" id="item-ca16eb83c7fc" data-tags="">
+<span class="badges"><span class="badge badge-intl">国际</span></span>
 <h4><a href="https://techcrunch.com/2026/11/10/n-able-takes-its-remote-access-service-offline-after-researcher-publishes-dozens-of-zero-day-bugs/" target="_blank" rel="noopener noreferrer">研究员公开数十个零日漏洞后，N-able 下线远程访问服务</a></h4>
-<p class="title-en">N-able takes its remote access service offline after researcher publishes dozens of zero-day bugs 远程访问服务商 N-able 在研究员公开数十个零日漏洞后下线服务，并称发生「重大安全事件」，敦促自建部署的客户也关停服务器以防被攻击</p>
+<p class="title-en">N-able takes its remote access service offline after researcher publishes dozens of zero-day bugs</p>
+<p class="desc">远程访问服务商 N-able 在研究员公开数十个零日漏洞后下线服务，并称发生「重大安全事件」，敦促自建部署的客户也关停服务器以防被攻击</p>
 <div class="item-foot">
 <span class="source-time">TechCrunch · 11-10 23:45</span>
-<a class="open-link" href="https://techcrunch.com/2026/11/10/n-able-takes-its-remote-access-service-offline-after-researcher-publishes-dozens-of-zero-day-bugs/" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://techcrunch.com/2026/11/10/n-able-takes-its-remote-access-service-offline-after-researcher-publishes-dozens-of-zero-day-bugs/" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag intl">科技 · 国际</div>
+<article class="item" id="item-c7bc0ff22cb1" data-tags="">
+<span class="badges"><span class="badge badge-intl">国际</span></span>
 <h4><a href="https://techcrunch.com/2026/11/10/x-energy-gets-green-light-to-build-its-first-small-modular-nuclear-reactors/" target="_blank" rel="noopener noreferrer">X-energy 获准建造首批小型模块化核反应堆</a></h4>
-<p class="title-en">X-energy gets green light to build its first small modular nuclear reactors X-energy 获得美国核管理委员会（NRC）施工许可，可在得克萨斯州建造四座小型模块化反应堆，小堆商业化迈出关键一步</p>
+<p class="title-en">X-energy gets green light to build its first small modular nuclear reactors</p>
+<p class="desc">X-energy 获得美国核管理委员会（NRC）施工许可，可在得克萨斯州建造四座小型模块化反应堆，小堆商业化迈出关键一步</p>
 <div class="item-foot">
 <span class="source-time">TechCrunch · 11-11 04:43</span>
-<a class="open-link" href="https://techcrunch.com/2026/11/10/x-energy-gets-green-light-to-build-its-first-small-modular-nuclear-reactors/" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://techcrunch.com/2026/11/10/x-energy-gets-green-light-to-build-its-first-small-modular-nuclear-reactors/" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
 </div>
-</div>
+</details>
 </section>
 <section id="sec-经济">
 <div class="section-header">Economy Channel</div>
-<div class="subsection">
 <div class="item-grid">
-<article class="item" data-tags="">
-<div class="item-tag">经济 · 国内</div>
+<article class="item" id="item-5665c421465c" data-tags="important hot">
+<span class="badges"><span class="badge badge-intl">国际</span><span class="badge badge-important">重要</span><span class="badge badge-hot">热门</span></span>
+<h4><a href="https://www.aljazeera.com/economy/2026/11/10/anthropic-targets-1-4-trillion-valuation-in-massive-stock-market-debut" target="_blank" rel="noopener noreferrer">Anthropic 冲刺 1.4 万亿美元估值上市</a></h4>
+<p class="title-en">Anthropic targets $1.4 trillion valuation in massive stock market debut</p>
+<p class="desc">Claude 开发商 Anthropic 计划下周 IPO，募资最高 644 亿美元，有望成为史上规模最大的 IPO 之一</p>
+<div class="item-foot">
+<span class="source-time">Al Jazeera · 11-11 01:21</span>
+<a class="open-link" href="https://www.aljazeera.com/economy/2026/11/10/anthropic-targets-1-4-trillion-valuation-in-massive-stock-market-debut" target="_blank" rel="noopener noreferrer">看原文</a>
+</div>
+</article>
+<article class="item" id="item-d978d20c7ef9" data-tags="important">
+<span class="badges"><span class="badge badge-intl">国际</span><span class="badge badge-important">重要</span></span>
+<h4><a href="https://www.ft.com/content/72abed21-6043-4b2b-81b1-f3a2547da5b7" target="_blank" rel="noopener noreferrer">美联储高官考虑 2022 年以来最大幅度加息</a></h4>
+<p class="title-en">Top Fed official considers largest rate rise since 2022</p>
+<p class="desc">美联储理事 Christopher Waller 表示，如果美国通胀不放缓，应考虑加息 50 个基点，市场加息预期随之升温</p>
+<div class="item-foot">
+<span class="source-time">Financial Times（据 FT RSS） · 11-11 00:03</span>
+<a class="open-link" href="https://www.ft.com/content/72abed21-6043-4b2b-81b1-f3a2547da5b7" target="_blank" rel="noopener noreferrer">看原文</a>
+</div>
+</article>
+</div>
+<details class="more-box">
+<summary>更多经济资讯（6）</summary>
+<div class="item-grid">
+<article class="item" id="item-2031317b9acc" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.chinanews.com.cn/cj/2026/11-10/10729731.shtml" target="_blank" rel="noopener noreferrer">台积电10月合并营收创单月历史新高</a></h4>
 <p class="desc">台积电 10 月合并营收约 5868.9 亿元新台币，环比增 14.7%、同比增 59.7%，创单月新高，反映 AI 芯片需求仍旺</p>
 <div class="item-foot">
 <span class="source-time">中新网 · 11-10 20:17</span>
-<a class="open-link" href="https://www.chinanews.com.cn/cj/2026/11-10/10729731.shtml" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.chinanews.com.cn/cj/2026/11-10/10729731.shtml" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">经济 · 国内</div>
+<article class="item" id="item-d51bf00cb380" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.chinanews.com.cn/cj/2026/11-10/10729697.shtml" target="_blank" rel="noopener noreferrer">前10月中国纺织服装出口值同比增长6.2%</a></h4>
 <p class="desc">中国纺织品进出口商会数据显示，1–10 月纺织服装累计出口 2590.6 亿美元、同比增 6.2%，其中 10 月出口同比增 17.3%</p>
 <div class="item-foot">
 <span class="source-time">中新网 · 11-10 19:48</span>
-<a class="open-link" href="https://www.chinanews.com.cn/cj/2026/11-10/10729697.shtml" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.chinanews.com.cn/cj/2026/11-10/10729697.shtml" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">经济 · 国内</div>
+<article class="item" id="item-386816d2e65a" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.chinanews.com.cn/cj/2026/11-10/10729698.shtml" target="_blank" rel="noopener noreferrer">10月中国城市轨道交通完成客运量29.4亿人次</a></h4>
 <p class="desc">交通运输部数据显示，10 月全国 54 个城市轨道交通完成客运量 29.4 亿人次，日均客运量同比增长 4.2%</p>
 <div class="item-foot">
 <span class="source-time">中新网 · 11-10 19:47</span>
-<a class="open-link" href="https://www.chinanews.com.cn/cj/2026/11-10/10729698.shtml" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.chinanews.com.cn/cj/2026/11-10/10729698.shtml" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">经济 · 国内</div>
+<article class="item" id="item-e7771bdb0d4d" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.chinanews.com.cn/cj/2026/11-10/10729804.shtml" target="_blank" rel="noopener noreferrer">浙江三澳核电项目4号机组主体工程开工</a></h4>
 <p class="desc">中广核浙江三澳核电 4 号机组 11 月 10 日浇筑核岛第一罐混凝土，正式开工；该项目是国内首个引入民营资本参股的核电项目，建成后年发电量预计 90 亿千瓦时</p>
 <div class="item-foot">
 <span class="source-time">中新网 · 11-10 21:51</span>
-<a class="open-link" href="https://www.chinanews.com.cn/cj/2026/11-10/10729804.shtml" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.chinanews.com.cn/cj/2026/11-10/10729804.shtml" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-</div>
-</div>
-<div class="subsection">
-<div class="item-grid">
-<article class="item" data-tags="important hot">
-<div class="item-tag intl">经济 · 国际</div>
-<span class="badges"><span class="badge badge-important">重要</span><span class="badge badge-hot">热门</span></span>
-<h4><a href="https://www.aljazeera.com/economy/2026/11/10/anthropic-targets-1-4-trillion-valuation-in-massive-stock-market-debut" target="_blank" rel="noopener noreferrer">Anthropic 冲刺 1.4 万亿美元估值上市</a></h4>
-<p class="title-en">Anthropic targets $1.4 trillion valuation in massive stock market debut Claude 开发商 Anthropic 计划下周 IPO，募资最高 644 亿美元，有望成为史上规模最大的 IPO 之一</p>
-<div class="item-foot">
-<span class="source-time">Al Jazeera · 11-11 01:21</span>
-<a class="open-link" href="https://www.aljazeera.com/economy/2026/11/10/anthropic-targets-1-4-trillion-valuation-in-massive-stock-market-debut" target="_blank" rel="noopener noreferrer">打开原文 →</a>
-</div>
-</article>
-<article class="item" data-tags="important">
-<div class="item-tag intl">经济 · 国际</div>
-<span class="badges"><span class="badge badge-important">重要</span></span>
-<h4><a href="https://www.ft.com/content/72abed21-6043-4b2b-81b1-f3a2547da5b7" target="_blank" rel="noopener noreferrer">美联储高官考虑 2022 年以来最大幅度加息</a></h4>
-<p class="title-en">Top Fed official considers largest rate rise since 2022 美联储理事 Christopher Waller 表示，如果美国通胀不放缓，应考虑加息 50 个基点，市场加息预期随之升温</p>
-<div class="item-foot">
-<span class="source-time">Financial Times（据 FT RSS） · 11-11 00:03</span>
-<a class="open-link" href="https://www.ft.com/content/72abed21-6043-4b2b-81b1-f3a2547da5b7" target="_blank" rel="noopener noreferrer">打开原文 →</a>
-</div>
-</article>
-<article class="item" data-tags="">
-<div class="item-tag intl">经济 · 国际</div>
+<article class="item" id="item-a68f22f4a585" data-tags="">
+<span class="badges"><span class="badge badge-intl">国际</span></span>
 <h4><a href="https://www.aljazeera.com/news/2026/11/10/us-petrol-prices-are-down-but-elevated-inflation-continues" target="_blank" rel="noopener noreferrer">美国油价回落，但通胀仍居高不下</a></h4>
-<p class="title-en">US petrol prices are down, but elevated inflation continues 美国最新数据显示，尽管汽油价格有所回落，整体通胀依然偏高，给美联储利率决策带来压力</p>
+<p class="title-en">US petrol prices are down, but elevated inflation continues</p>
+<p class="desc">美国最新数据显示，尽管汽油价格有所回落，整体通胀依然偏高，给美联储利率决策带来压力</p>
 <div class="item-foot">
 <span class="source-time">Al Jazeera · 11-11 01:40</span>
-<a class="open-link" href="https://www.aljazeera.com/news/2026/11/10/us-petrol-prices-are-down-but-elevated-inflation-continues" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.aljazeera.com/news/2026/11/10/us-petrol-prices-are-down-but-elevated-inflation-continues" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag intl">经济 · 国际</div>
+<article class="item" id="item-13b83cc62559" data-tags="">
+<span class="badges"><span class="badge badge-intl">国际</span></span>
 <h4><a href="https://www.bloomberg.com/news/articles/2026-11-10/barrick-mining-files-to-take-north-american-gold-assets-public" target="_blank" rel="noopener noreferrer">巴里克矿业为北美黄金资产申请 IPO</a></h4>
-<p class="title-en">Barrick Mining Files for IPO of North American Gold Assets 加拿大矿企 Barrick Mining 申请将北美黄金业务在美国单独上市，是其在董事长 John Thornton 主导下战略重组的一部分</p>
+<p class="title-en">Barrick Mining Files for IPO of North American Gold Assets</p>
+<p class="desc">加拿大矿企 Barrick Mining 申请将北美黄金业务在美国单独上市，是其在董事长 John Thornton 主导下战略重组的一部分</p>
 <div class="item-foot">
 <span class="source-time">Bloomberg（据彭博 RSS） · 11-11 05:26</span>
-<a class="open-link" href="https://www.bloomberg.com/news/articles/2026-11-10/barrick-mining-files-to-take-north-american-gold-assets-public" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.bloomberg.com/news/articles/2026-11-10/barrick-mining-files-to-take-north-american-gold-assets-public" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
 </div>
-</div>
+</details>
 </section>
 <section id="sec-社会">
 <div class="section-header">Society Channel</div>
-<div class="subsection">
 <div class="item-grid">
-<article class="item" data-tags="useful">
-<div class="item-tag">社会 · 国内</div>
-<span class="badges"><span class="badge badge-useful">实用</span></span>
+<article class="item" id="item-d3e7b4374d54" data-tags="important">
+<span class="badges"><span class="badge badge-intl">国际</span><span class="badge badge-important">重要</span></span>
+<h4><a href="https://www.bbc.co.uk/news/articles/crwydyde0lp3o" target="_blank" rel="noopener noreferrer">美国要求 GLP-1 类药物加注可致失明的罕见眼病警示</a></h4>
+<p class="title-en">Makers of GLP-1 drugs ordered to add warnings about rare eye condition that can lead to blindness</p>
+<p class="desc">美国食品药品监督管理局（FDA）要求 Ozempic、Wegovy 等 GLP-1 类减重药在标签上加注罕见眼病 NAION 风险，这类药物使用者众多</p>
+<div class="item-foot">
+<span class="source-time">BBC · 11-11 02:16</span>
+<a class="open-link" href="https://www.bbc.co.uk/news/articles/crwydyde0lp3o" target="_blank" rel="noopener noreferrer">看原文</a>
+</div>
+</article>
+<article class="item" id="item-050829af06f0" data-tags="useful">
+<span class="badges"><span class="badge badge-domestic">国内</span><span class="badge badge-useful">实用</span></span>
 <h4><a href="https://www.chinanews.com.cn/cj/2026/11-10/10729746.shtml" target="_blank" rel="noopener noreferrer">中国官方批复“700”专用码号试点 点外卖将隐藏真实手机号</a></h4>
 <p class="desc">工信部批复 10 家企业开展号码保护服务试点并分配 700 专用号段，今后点外卖等场景可用专用号码代替真实手机号，便于识别来电、防范诈骗骚扰</p>
 <div class="item-foot">
 <span class="source-time">中新网 · 11-10 20:49</span>
-<a class="open-link" href="https://www.chinanews.com.cn/cj/2026/11-10/10729746.shtml" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.chinanews.com.cn/cj/2026/11-10/10729746.shtml" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">社会 · 国内</div>
+</div>
+<details class="more-box">
+<summary>更多社会资讯（6）</summary>
+<div class="item-grid">
+<article class="item" id="item-a58e3bbf42a2" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.chinanews.com.cn/sh/2026/11-10/10729864.shtml" target="_blank" rel="noopener noreferrer">商家呼吁“取消外卖”？实为MCN制造对立、虚假摆拍引流</a></h4>
 <p class="desc">社交平台上批量出现的「取消外卖」短视频，经调查多为 MCN 机构用模板批量摆拍、制造对立来博流量，并非商家真实诉求</p>
 <div class="item-foot">
 <span class="source-time">中新网 · 11-10 23:33</span>
-<a class="open-link" href="https://www.chinanews.com.cn/sh/2026/11-10/10729864.shtml" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.chinanews.com.cn/sh/2026/11-10/10729864.shtml" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">社会 · 国内</div>
+<article class="item" id="item-3a8aac9e3ea8" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.chinanews.com.cn/sh/2026/11-10/10729745.shtml" target="_blank" rel="noopener noreferrer">长三角多地气温创今年下半年新低</a></h4>
 <p class="desc">受下半年首场寒潮影响，上海、杭州等地 10 日最低气温创下半年新低，浙江全省最低气温跌破 10℃，浙中北部分地区仅 3–6℃</p>
 <div class="item-foot">
 <span class="source-time">中新网 · 11-10 20:43</span>
-<a class="open-link" href="https://www.chinanews.com.cn/sh/2026/11-10/10729745.shtml" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.chinanews.com.cn/sh/2026/11-10/10729745.shtml" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">社会 · 国内</div>
+<article class="item" id="item-e8bd468ce8a8" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.chinanews.com.cn/sh/2026/11-10/10729836.shtml" target="_blank" rel="noopener noreferrer">哈尔滨公交取消暖风开启“气温门槛”：优先考虑乘客体感</a></h4>
 <p class="desc">哈尔滨公交今冬取消「室外 -10℃ 才开暖风」的规定，改为按乘客体感开启，并给座椅加厚保暖</p>
 <div class="item-foot">
 <span class="source-time">中新网 · 11-10 21:58</span>
-<a class="open-link" href="https://www.chinanews.com.cn/sh/2026/11-10/10729836.shtml" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.chinanews.com.cn/sh/2026/11-10/10729836.shtml" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-</div>
-</div>
-<div class="subsection">
-<div class="item-grid">
-<article class="item" data-tags="important">
-<div class="item-tag intl">社会 · 国际</div>
-<span class="badges"><span class="badge badge-important">重要</span></span>
-<h4><a href="https://www.bbc.co.uk/news/articles/crwydyde0lp3o" target="_blank" rel="noopener noreferrer">美国要求 GLP-1 类药物加注可致失明的罕见眼病警示</a></h4>
-<p class="title-en">Makers of GLP-1 drugs ordered to add warnings about rare eye condition that can lead to blindness 美国食品药品监督管理局（FDA）要求 Ozempic、Wegovy 等 GLP-1 类减重药在标签上加注罕见眼病 NAION 风险，这类药物使用者众多</p>
-<div class="item-foot">
-<span class="source-time">BBC · 11-11 02:16</span>
-<a class="open-link" href="https://www.bbc.co.uk/news/articles/crwydyde0lp3o" target="_blank" rel="noopener noreferrer">打开原文 →</a>
-</div>
-</article>
-<article class="item" data-tags="">
-<div class="item-tag intl">社会 · 国际</div>
+<article class="item" id="item-fd15327e38cf" data-tags="">
+<span class="badges"><span class="badge badge-intl">国际</span></span>
 <h4><a href="https://www.bbc.co.uk/news/articles/ckx2q2velpjjo" target="_blank" rel="noopener noreferrer">保加利亚大雾致高速连环相撞，至少 12 人死亡</a></h4>
-<p class="title-en">At least 12 dead after motorway pile-ups in Bulgaria fog 保加利亚 Trakia 高速公路因大雾发生多起连环相撞，至少 12 人死亡、约 50 人受伤</p>
+<p class="title-en">At least 12 dead after motorway pile-ups in Bulgaria fog</p>
+<p class="desc">保加利亚 Trakia 高速公路因大雾发生多起连环相撞，至少 12 人死亡、约 50 人受伤</p>
 <div class="item-foot">
 <span class="source-time">BBC · 11-10 20:41</span>
-<a class="open-link" href="https://www.bbc.co.uk/news/articles/ckx2q2velpjjo" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.bbc.co.uk/news/articles/ckx2q2velpjjo" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag intl">社会 · 国际</div>
+<article class="item" id="item-563f84d42b79" data-tags="">
+<span class="badges"><span class="badge badge-intl">国际</span></span>
 <h4><a href="https://www.aljazeera.com/news/2026/11/10/us-soldier-arrested-in-uk-over-alleged-russian-espionage" target="_blank" rel="noopener noreferrer">一名美军士兵涉嫌为俄罗斯从事间谍活动在英国被捕</a></h4>
-<p class="title-en">US soldier arrested in UK on suspicion of spying for Russia 伦敦警方称，其反恐部门与美国联邦调查局（FBI）和美军合作，逮捕一名涉嫌为俄罗斯从事间谍活动的美军士兵</p>
+<p class="title-en">US soldier arrested in UK on suspicion of spying for Russia</p>
+<p class="desc">伦敦警方称，其反恐部门与美国联邦调查局（FBI）和美军合作，逮捕一名涉嫌为俄罗斯从事间谍活动的美军士兵</p>
 <div class="item-foot">
 <span class="source-time">Al Jazeera · 11-11 04:41</span>
-<a class="open-link" href="https://www.aljazeera.com/news/2026/11/10/us-soldier-arrested-in-uk-over-alleged-russian-espionage" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.aljazeera.com/news/2026/11/10/us-soldier-arrested-in-uk-over-alleged-russian-espionage" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag intl">社会 · 国际</div>
+<article class="item" id="item-a1739d5b8534" data-tags="">
+<span class="badges"><span class="badge badge-intl">国际</span></span>
 <h4><a href="https://www.aljazeera.com/news/2026/11/10/spain-braces-for-nationwide-walkout-as-anger-over-housing-costs-boils-over" target="_blank" rel="noopener noreferrer">住房和生活成本引发不满，西班牙迎来全国大罢工</a></h4>
-<p class="title-en">Spain braces for nationwide walkout as anger over housing, costs boils over 西班牙两大工会发起的 24 小时全国罢工定于周三开始，起因是民众对住房和生活成本的不满持续升温</p>
+<p class="title-en">Spain braces for nationwide walkout as anger over housing, costs boils over</p>
+<p class="desc">西班牙两大工会发起的 24 小时全国罢工定于周三开始，起因是民众对住房和生活成本的不满持续升温</p>
 <div class="item-foot">
 <span class="source-time">Al Jazeera · 11-11 02:07</span>
-<a class="open-link" href="https://www.aljazeera.com/news/2026/11/10/spain-braces-for-nationwide-walkout-as-anger-over-housing-costs-boils-over" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.aljazeera.com/news/2026/11/10/spain-braces-for-nationwide-walkout-as-anger-over-housing-costs-boils-over" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
 </div>
-</div>
+</details>
 </section>
 <section id="sec-文化">
 <div class="section-header">Culture Channel</div>
-<div class="subsection">
 <div class="item-grid">
-<article class="item" data-tags="hot">
-<div class="item-tag">文化 · 国内</div>
-<span class="badges"><span class="badge badge-hot">热门</span></span>
+<article class="item" id="item-b26f60a91bfe" data-tags="hot">
+<span class="badges"><span class="badge badge-domestic">国内</span><span class="badge badge-hot">热门</span></span>
 <h4><a href="https://www.ithome.com/1/025/189.htm" target="_blank" rel="noopener noreferrer">第 39 届中国电影金鸡奖全名单公布，《浪浪山小妖怪》《窗外是蓝星》《给阿嬷的情书》等获奖</a></h4>
 <p class="desc">第 39 届金鸡奖颁奖典礼举行，《浪浪山小妖怪》《窗外是蓝星》《给阿嬷的情书》《南京照相馆》等作品获奖</p>
 <div class="item-foot">
 <span class="source-time">IT之家 · 11-10 23:05</span>
-<a class="open-link" href="https://www.ithome.com/1/025/189.htm" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.ithome.com/1/025/189.htm" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">文化 · 国内</div>
+</div>
+<details class="more-box">
+<summary>更多文化资讯（5）</summary>
+<div class="item-grid">
+<article class="item" id="item-88f1d5f54fef" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.chinanews.com.cn/cul/2026/11-10/10729619.shtml" target="_blank" rel="noopener noreferrer">提升书店供给质量 中国八部门联合发文支持实体书店</a></h4>
 <p class="desc">中宣部等八部门联合发文支持实体书店服务全民阅读，提出实施「千名店长」培训计划、打造地标书店和特色阅读空间，并将书店纳入社区便民生活圈</p>
 <div class="item-foot">
 <span class="source-time">中新网 · 11-10 19:49</span>
-<a class="open-link" href="https://www.chinanews.com.cn/cul/2026/11-10/10729619.shtml" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.chinanews.com.cn/cul/2026/11-10/10729619.shtml" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">文化 · 国内</div>
+<article class="item" id="item-3df2a4ff73d8" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.chinanews.com.cn/cul/2026/11-10/10729544.shtml" target="_blank" rel="noopener noreferrer">陕西榆林新发现秦代行宫遗址</a></h4>
 <p class="desc">榆林考古人员在毛乌素沙地东南部新发现黄土梁遗址，出土大量典型秦代砖瓦，初步判断为秦直道沿线的附属行宫</p>
 <div class="item-foot">
 <span class="source-time">中新网 · 11-10 17:31</span>
-<a class="open-link" href="https://www.chinanews.com.cn/cul/2026/11-10/10729544.shtml" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.chinanews.com.cn/cul/2026/11-10/10729544.shtml" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">文化 · 国内</div>
+<article class="item" id="item-a980145af72a" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.chinanews.com.cn/cul/2026/11-10/10729536.shtml" target="_blank" rel="noopener noreferrer">传世名画《富春山居图》前段亮相杭州 全卷分藏两岸</a></h4>
 <p class="desc">黄公望《富春山居图》前段《剩山图》在杭州展出，这幅元代名画全卷分藏海峡两岸</p>
 <div class="item-foot">
 <span class="source-time">中新网 · 11-10 17:21</span>
-<a class="open-link" href="https://www.chinanews.com.cn/cul/2026/11-10/10729536.shtml" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.chinanews.com.cn/cul/2026/11-10/10729536.shtml" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-</div>
-</div>
-<div class="subsection">
-<div class="item-grid">
-<article class="item" data-tags="">
-<div class="item-tag intl">文化 · 国际</div>
+<article class="item" id="item-2aea4f3dd1d1" data-tags="">
+<span class="badges"><span class="badge badge-intl">国际</span></span>
 <h4><a href="https://www.bbc.co.uk/news/articles/cw0737kv52lko" target="_blank" rel="noopener noreferrer">2026 布克奖揭晓：M John Harrison 小说《The End of Everything》（《一切的终结》）获奖</a></h4>
-<p class="title-en">Booker Prize 2026: M John Harrison&#x27;s &#x27;baffling but brilliant&#x27; novel The End of Everything wins 81 岁的 M John Harrison 凭后末日小说《The End of Everything》获得布克奖，成为该奖史上最年长的得主</p>
+<p class="title-en">Booker Prize 2026: M John Harrison&#x27;s &#x27;baffling but brilliant&#x27; novel The End of Everything wins</p>
+<p class="desc">81 岁的 M John Harrison 凭后末日小说《The End of Everything》获得布克奖，成为该奖史上最年长的得主</p>
 <div class="item-foot">
 <span class="source-time">BBC · 11-10 06:16</span>
-<a class="open-link" href="https://www.bbc.co.uk/news/articles/cw0737kv52lko" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.bbc.co.uk/news/articles/cw0737kv52lko" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag intl">文化 · 国际</div>
+<article class="item" id="item-ef7de6fce9a2" data-tags="">
+<span class="badges"><span class="badge badge-intl">国际</span></span>
 <h4><a href="https://arstechnica.com/culture/2026/11/dcu-shake-up-james-gunn-and-peter-safran-out-post-merger/" target="_blank" rel="noopener noreferrer">DC 影视宇宙大调整：James Gunn 与 Peter Safran 在合并后离任</a></h4>
-<p class="title-en">DCU shake-up: James Gunn and Peter Safran out post-merger 合并后 DC 影视宇宙（DCU）管理层调整，James Gunn 与 Peter Safran 离任，由曾是 Kevin Feige 门生的制片人 Jeremy Latcham 接任</p>
+<p class="title-en">DCU shake-up: James Gunn and Peter Safran out post-merger</p>
+<p class="desc">合并后 DC 影视宇宙（DCU）管理层调整，James Gunn 与 Peter Safran 离任，由曾是 Kevin Feige 门生的制片人 Jeremy Latcham 接任</p>
 <div class="item-foot">
 <span class="source-time">Ars Technica · 11-10 05:55</span>
-<a class="open-link" href="https://arstechnica.com/culture/2026/11/dcu-shake-up-james-gunn-and-peter-safran-out-post-merger/" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://arstechnica.com/culture/2026/11/dcu-shake-up-james-gunn-and-peter-safran-out-post-merger/" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
 </div>
-</div>
+</details>
 </section>
 <section id="sec-游戏">
 <div class="section-header">Game Channel</div>
-<div class="subsection">
 <div class="item-grid">
-<article class="item" data-tags="">
-<div class="item-tag">游戏 · 国内</div>
+<article class="item" id="item-cd8a0be0580f" data-tags="hot">
+<span class="badges"><span class="badge badge-intl">国际</span><span class="badge badge-hot">热门</span></span>
+<h4><a href="https://www.eurogamer.net/gta-6-most-preordered-game-playstation-store-history" target="_blank" rel="noopener noreferrer">《GTA 6》成为 PlayStation 商店史上预购量最高的游戏</a></h4>
+<p class="title-en">Grand Theft Auto 6 becomes the most pre-ordered game in PlayStation Store history, Sony says, as PS5 pre-loads go live</p>
+<p class="desc">索尼称《GTA 6》已成为 PlayStation Store 史上预购量最高的游戏，PS5 和 PS5 Pro 预载现已开放</p>
+<div class="item-foot">
+<span class="source-time">Eurogamer · 11-11 00:31</span>
+<a class="open-link" href="https://www.eurogamer.net/gta-6-most-preordered-game-playstation-store-history" target="_blank" rel="noopener noreferrer">看原文</a>
+</div>
+</article>
+</div>
+<details class="more-box">
+<summary>更多游戏资讯（5）</summary>
+<div class="item-grid">
+<article class="item" id="item-7d8cbb0c73f9" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.ithome.com/1/025/194.htm" target="_blank" rel="noopener noreferrer">《足球经理 27》今日发售：国区售价 268 元，首发加入 PC Game Pass</a></h4>
 <p class="desc">SEGA 发行的《足球经理 27》正式发售，国区定价 268 元，支持简体中文，首发加入 PC Game Pass</p>
 <div class="item-foot">
 <span class="source-time">IT之家 · 11-11 00:14</span>
-<a class="open-link" href="https://www.ithome.com/1/025/194.htm" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.ithome.com/1/025/194.htm" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">游戏 · 国内</div>
+<article class="item" id="item-d5c6ee6c4674" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.ithome.com/1/025/183.htm" target="_blank" rel="noopener noreferrer">任天堂古川俊太郎：Switch 2 售价暂不调整，若成本实在扛不住就得涨价</a></h4>
 <p class="desc">任天堂社长古川俊太郎称 Switch 2 短期没有涨价计划，但如果零部件成本长期超出可消化范围就可能调价</p>
 <div class="item-foot">
 <span class="source-time">IT之家 · 11-10 22:37</span>
-<a class="open-link" href="https://www.ithome.com/1/025/183.htm" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.ithome.com/1/025/183.htm" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag">游戏 · 国内</div>
+<article class="item" id="item-3d9e147dbec9" data-tags="">
+<span class="badges"><span class="badge badge-domestic">国内</span></span>
 <h4><a href="https://www.ithome.com/1/025/180.htm" target="_blank" rel="noopener noreferrer">Steam 新一周游戏销量榜：《COD：MW4》反超《影之刃零》登顶全球</a></h4>
 <p class="desc">Steam 最新一周销量榜中，《使命召唤》新作反超国产动作游戏《影之刃零》登顶全球榜，《影之刃零》仍居国区第一</p>
 <div class="item-foot">
 <span class="source-time">IT之家 · 11-10 22:31</span>
-<a class="open-link" href="https://www.ithome.com/1/025/180.htm" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.ithome.com/1/025/180.htm" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-</div>
-</div>
-<div class="subsection">
-<div class="item-grid">
-<article class="item" data-tags="hot">
-<div class="item-tag intl">游戏 · 国际</div>
-<span class="badges"><span class="badge badge-hot">热门</span></span>
-<h4><a href="https://www.eurogamer.net/gta-6-most-preordered-game-playstation-store-history" target="_blank" rel="noopener noreferrer">《GTA 6》成为 PlayStation 商店史上预购量最高的游戏</a></h4>
-<p class="title-en">Grand Theft Auto 6 becomes the most pre-ordered game in PlayStation Store history, Sony says, as PS5 pre-loads go live 索尼称《GTA 6》已成为 PlayStation Store 史上预购量最高的游戏，PS5 和 PS5 Pro 预载现已开放</p>
-<div class="item-foot">
-<span class="source-time">Eurogamer · 11-11 00:31</span>
-<a class="open-link" href="https://www.eurogamer.net/gta-6-most-preordered-game-playstation-store-history" target="_blank" rel="noopener noreferrer">打开原文 →</a>
-</div>
-</article>
-<article class="item" data-tags="">
-<div class="item-tag intl">游戏 · 国际</div>
+<article class="item" id="item-ebc21f710fa6" data-tags="">
+<span class="badges"><span class="badge badge-intl">国际</span></span>
 <h4><a href="https://www.ign.com/articles/playstation-cancels-live-service-heist-shooter-fairgames" target="_blank" rel="noopener noreferrer">索尼取消在线服务型劫案射击游戏《Fairgames》</a></h4>
-<p class="title-en">PlayStation&#x27;s Live-Service Heist Shooter, Fairgames, Has Been Canceled 索尼取消了旗下 Haven Studios 开发的在线服务型劫案射击游戏《Fairgames》，又一款 PlayStation 在线服务游戏夭折</p>
+<p class="title-en">PlayStation&#x27;s Live-Service Heist Shooter, Fairgames, Has Been Canceled</p>
+<p class="desc">索尼取消了旗下 Haven Studios 开发的在线服务型劫案射击游戏《Fairgames》，又一款 PlayStation 在线服务游戏夭折</p>
 <div class="item-foot">
 <span class="source-time">IGN · 11-11 05:00</span>
-<a class="open-link" href="https://www.ign.com/articles/playstation-cancels-live-service-heist-shooter-fairgames" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.ign.com/articles/playstation-cancels-live-service-heist-shooter-fairgames" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
-<article class="item" data-tags="">
-<div class="item-tag intl">游戏 · 国际</div>
+<article class="item" id="item-9181cd5db686" data-tags="">
+<span class="badges"><span class="badge badge-intl">国际</span></span>
 <h4><a href="https://www.ign.com/articles/playstation-plus-pc-app-will-go-offline-december-10-as-sony-continues-to-retreat-from-pc" target="_blank" rel="noopener noreferrer">PlayStation Plus PC 应用将于 12 月 10 日下线</a></h4>
-<p class="title-en">PlayStation Plus PC App Will Go Offline December 10, as Sony Continues to Retreat From PC 索尼将在 12 月 10 日关停 PlayStation Plus PC 应用，这原本是在电脑上串流玩 PS5 游戏的主要途径，索尼继续收缩 PC 业务</p>
+<p class="title-en">PlayStation Plus PC App Will Go Offline December 10, as Sony Continues to Retreat From PC</p>
+<p class="desc">索尼将在 12 月 10 日关停 PlayStation Plus PC 应用，这原本是在电脑上串流玩 PS5 游戏的主要途径，索尼继续收缩 PC 业务</p>
 <div class="item-foot">
 <span class="source-time">IGN · 11-11 02:11</span>
-<a class="open-link" href="https://www.ign.com/articles/playstation-plus-pc-app-will-go-offline-december-10-as-sony-continues-to-retreat-from-pc" target="_blank" rel="noopener noreferrer">打开原文 →</a>
+<a class="open-link" href="https://www.ign.com/articles/playstation-plus-pc-app-will-go-offline-december-10-as-sony-continues-to-retreat-from-pc" target="_blank" rel="noopener noreferrer">看原文</a>
 </div>
 </article>
 </div>
-</div>
+</details>
 </section>
 </div>
     </main>
@@ -881,5 +1069,20 @@ footer p { margin: 0; }
       <p>来源限定白名单，均为 48 小时内公开报道</p>
     </footer>
   </div>
+  <a class="back-to-hot" href="#hot" aria-label="回到热门"><span class="back-to-hot-arrow" aria-hidden="true">↑</span><span class="back-to-hot-label">热门</span></a>
+  <script>
+  (function () {
+    var btn = document.querySelector(".back-to-hot");
+    var hot = document.querySelector(".hot-zone");
+    if (!btn || !hot || !("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      var e = entries[0];
+      if (!e) return;
+      if (e.isIntersecting) btn.setAttribute("hidden", "");
+      else btn.removeAttribute("hidden");
+    }, { threshold: 0 });
+    io.observe(hot);
+  })();
+  </script>
 </body>
 </html>
