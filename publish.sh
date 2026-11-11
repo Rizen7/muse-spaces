@@ -84,6 +84,10 @@ if [[ -z "$(git config --get user.email)" ]]; then
 fi
 
 git add -- "index.html" "$TYPE/index.html" ".nojekyll"
+# 配图目录一并纳入本次发布（只加 img/，不加其他文件）
+if [[ -d img ]]; then
+  git add -- "img/"
+fi
 if git diff --cached --quiet; then
   log "工作区没有新的页面改动，仍去检查线上是否已是这一版。"
 else

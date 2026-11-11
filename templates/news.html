@@ -20,6 +20,7 @@
       {{pill}}
     </header>
     {{banner}}
+    {{hot}}
     {{sec_nav}}
     <main>
       {{content}}
@@ -28,5 +29,20 @@
       <p>来源限定白名单，均为 48 小时内公开报道</p>
     </footer>
   </div>
+  <a class="back-to-hot" href="#hot" aria-label="回到热门"><span class="back-to-hot-arrow" aria-hidden="true">↑</span><span class="back-to-hot-label">热门</span></a>
+  <script>
+  (function () {
+    var btn = document.querySelector(".back-to-hot");
+    var hot = document.querySelector(".hot-zone");
+    if (!btn || !hot || !("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      var e = entries[0];
+      if (!e) return;
+      if (e.isIntersecting) btn.setAttribute("hidden", "");
+      else btn.removeAttribute("hidden");
+    }, { threshold: 0 });
+    io.observe(hot);
+  })();
+  </script>
 </body>
 </html>

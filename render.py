@@ -7,16 +7,30 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
+import io
 import re
 import sys
+import urllib.error
+import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 STYLES = ROOT / "styles"
 TEMPLATES = ROOT / "templates"
+IMG_DIR = ROOT / "img"
 BJ = timezone(timedelta(hours=8))
+
+IMAGE_LINE_RE = re.compile(r"配图[：:]\s*(https?://\S+)")
+IMG_NAME_RE = re.compile(
+    r"^(\d{4}-\d{2}-\d{2})-([0-9a-f]{8})\.(jpg|jpeg|png|webp|gif)$"
+)
+IMG_USER_AGENT = (
+    "Mozilla/5.0 (compatible; MuseSpaces/1.0; "
+    "+https://rizen7.github.io/muse-spaces/)"
+)
 
 NEWS_SECTIONS = ["AI", "科技", "经济", "社会", "文化", "游戏"]
 DEALS_SECTIONS = ["白嫖", "限免", "低价", "币圈空投", "NFT"]
@@ -36,7 +50,7 @@ BADGE_PRIORITY = {"重要": 0, "热门": 1, "实用": 2}
 
 # 原文标题 / 英文原标题（全/半角冒号），不误匹配「原文链接」
 ORIG_TITLE_RE = re.compile(
-    r"(?:英文原标题|原文标题)[：:]\s*(.+?)(?=\s*(?:来源[：:]|发布时间[：:]|价格[：:]|截止时间[：:]|截止时间未写明|门槛[：:]|费用[：:]|反馈[：:]|原文链接[：:]|链接[：:]|。|$))"
+    r"(?:英文原标题|原文标题)[：:]\s*(.+?)(?=\s*(?:来源[：:]|发布时间[：:]|价格[：:]|截止时间[：:]|截止时间未写明|门槛[：:]|费用[：:]|反馈[：:]|原文链接[：:]|链接[：:]|。|\n|$))"
 )
 
 # 价格提取：「到手价 X」或「现价X」或首段价格数字
@@ -162,7 +176,7 @@ def split_items(block_lines: list[str]) -> list[tuple[str, str]]:
         if title is None:
             body = []
             return
-        items.append((title, " ".join(x.strip() for x in body if x.strip())))
+        items.append((title, "\n".join(x.strip() for x in body if x.strip())))
         title = None
         body = []
 
@@ -270,8 +284,19 @@ def extract_orig_title(body: str) -> tuple[str | None, str]:
     return orig_title, new_body
 
 
+def extract_image_url(body: str) -> tuple[str | None, str]:
+    """抽出并剥掉「配图：URL」，返回 (url, 新正文)。"""
+    m = IMAGE_LINE_RE.search(body)
+    if not m:
+        return None, body
+    url = strip_url_punct(m.group(1))
+    new_body = (body[: m.start()] + " " + body[m.end() :]).strip()
+    return url, new_body
+
+
 def extract_url_and_fields(body: str) -> tuple[str | None, str | None, str | None, str, dict[str, str]]:
-    """返回 (url, risk, orig_title, desc, fields)。"""
+    """返回 (url, risk, orig_title, desc, fields)。配图行会被剥掉，不进入摘要。"""
+    _, body = extract_image_url(body)
     orig_title, body = extract_orig_title(body)
 
     risk = None
@@ -305,7 +330,7 @@ def extract_url_and_fields(body: str) -> tuple[str | None, str | None, str | Non
             else:
                 fields[label] = value
         i += 2
-    desc = desc.strip("。;； ").strip()
+    desc = re.sub(r"\s+", " ", desc).strip("。;； ").strip()
     return url, risk, orig_title, desc, fields
 
 
@@ -417,6 +442,149 @@ def pill_html(status: str | None, updated: str, failed: bool) -> str:
     )
 
 
+
+# ── 资讯配图（本地下载 + 压缩）──────────────────────────────────────────────
+
+def cleanup_old_images() -> None:
+    """只清理 img/ 下本程序命名且日期早于 7 天的文件。"""
+    if not IMG_DIR.is_dir():
+        return
+    cutoff = datetime.now(BJ).date() - timedelta(days=7)
+    for path in IMG_DIR.iterdir():
+        if not path.is_file():
+            continue
+        m = IMG_NAME_RE.match(path.name)
+        if not m:
+            continue
+        try:
+            file_date = datetime.strptime(m.group(1), "%Y-%m-%d").date()
+        except ValueError:
+            continue
+        if file_date < cutoff:
+            try:
+                path.unlink()
+            except OSError:
+                pass
+
+
+def _existing_image(short_hash: str) -> Path | None:
+    if not IMG_DIR.is_dir():
+        return None
+    for path in IMG_DIR.iterdir():
+        if not path.is_file():
+            continue
+        m = IMG_NAME_RE.match(path.name)
+        if m and m.group(2) == short_hash:
+            return path
+    return None
+
+
+def _compress_image_bytes(raw: bytes) -> tuple[bytes, str] | None:
+    """压缩到宽 ≤800，尽量 ≤150KB。失败返回 None。"""
+    try:
+        from PIL import Image
+    except ImportError:
+        return None
+    try:
+        im = Image.open(io.BytesIO(raw))
+        im.load()
+    except Exception:
+        return None
+    try:
+        if im.mode == "P":
+            im = im.convert("RGBA") if "transparency" in im.info else im.convert("RGB")
+        if im.width > 800:
+            height = max(1, int(im.height * 800 / im.width))
+            im = im.resize((800, height), Image.Resampling.LANCZOS)
+
+        def encode(image: Image.Image, fmt: str, **kwargs) -> bytes:
+            buf = io.BytesIO()
+            image.save(buf, format=fmt, **kwargs)
+            return buf.getvalue()
+
+        limit = 150 * 1024
+        if im.mode in ("RGBA", "LA"):
+            chosen = None
+            ext = "webp"
+            for quality in (80, 70, 60, 50, 40):
+                data = encode(im, "WEBP", quality=quality, method=6)
+                chosen, ext = data, "webp"
+                if len(data) <= limit:
+                    break
+            try:
+                png = encode(im, "PNG", optimize=True)
+                if chosen is None or len(png) < len(chosen):
+                    chosen, ext = png, "png"
+            except Exception:
+                pass
+            return (chosen, ext) if chosen else None
+
+        rgb = im.convert("RGB")
+        chosen = None
+        for quality in (85, 75, 65, 55, 45, 35):
+            data = encode(rgb, "JPEG", quality=quality, optimize=True)
+            chosen = data
+            if len(data) <= limit:
+                break
+        return (chosen, "jpg") if chosen else None
+    except Exception:
+        return None
+
+
+def fetch_and_store_image(url: str) -> Path | None:
+    """下载并压缩到 img/。任何失败返回 None，不抛给调用方。"""
+    if not url or not url.startswith(("http://", "https://")):
+        return None
+    short_hash = hashlib.sha256(url.encode("utf-8")).hexdigest()[:8]
+    existing = _existing_image(short_hash)
+    if existing:
+        return existing
+    try:
+        IMG_DIR.mkdir(parents=True, exist_ok=True)
+        req = urllib.request.Request(
+            url,
+            headers={"User-Agent": IMG_USER_AGENT, "Accept": "image/avif,image/webp,image/*,*/*;q=0.8"},
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            raw = resp.read()
+        if not raw:
+            return None
+        compressed = _compress_image_bytes(raw)
+        if not compressed:
+            return None
+        data, ext = compressed
+        day = datetime.now(BJ).strftime("%Y-%m-%d")
+        dest = IMG_DIR / f"{day}-{short_hash}.{ext}"
+        dest.write_bytes(data)
+        return dest
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, OSError, ValueError):
+        return None
+    except Exception:
+        return None
+
+
+def img_src_for(out_path: Path | None, img_path: Path) -> str:
+    base = (out_path.resolve().parent if out_path else (ROOT / "news"))
+    try:
+        rel = img_path.resolve().relative_to(base, walk_up=True)
+    except TypeError:
+        # 极旧 Python 无 walk_up 时的兜底（本环境是 3.13）
+        import os
+        rel = Path(os.path.relpath(img_path.resolve(), start=base))
+    return rel.as_posix()
+
+
+def make_item_id(sec: str, raw_title: str, body: str) -> str:
+    img_url, body2 = extract_image_url(body)
+    url, _, _, _, _ = extract_url_and_fields(body2 if img_url else body)
+    basis = f"{sec}|{raw_title}|{url or ''}"
+    return "item-" + hashlib.sha256(basis.encode("utf-8")).hexdigest()[:12]
+
+
+def region_label(sub: str) -> str:
+    """用户指定用词：国内 / 国际（不用「国外」）。"""
+    return "国际" if sub == "国际" else "国内"
+
 # ── 资讯页渲染 ────────────────────────────────────────────────────────────────
 
 _SEC_CHANNEL = {
@@ -435,22 +603,41 @@ def _item_tag_news_html(sec: str, sub: str) -> str:
     return f'<div{cls_attr}>{esc(sec)} · {esc(sub)}</div>'
 
 
-def render_item_news(raw_title: str, body: str, sec: str, sub: str, is_feat: bool = False) -> str:
-    """渲染资讯条目 HTML 片段。"""
+def render_item_news(
+    raw_title: str,
+    body: str,
+    sec: str,
+    sub: str,
+    item_id: str,
+    out_path: Path | None = None,
+) -> str:
+    """渲染资讯条目 HTML 片段（混排卡片，无封面 feat-item）。"""
     badges, clean_title = extract_badges(raw_title)
-    url, risk, orig_title, desc, fields = extract_url_and_fields(body)
+    img_url, body_wo_img = extract_image_url(body)
+    url, risk, orig_title, desc, fields = extract_url_and_fields(body_wo_img)
     dtags = data_tags_attr(badges)
 
-    card_cls = "feat-item" if is_feat else "item"
-    parts = [f'<article class="{card_cls}"{dtags}>']
+    parts = [f'<article class="item" id="{esc(item_id)}"{dtags}>']
 
-    # 分区标签 + 重点徽章
-    parts.append(_item_tag_news_html(sec, sub))
-    bhtml = badges_html(badges)
-    if bhtml:
-        parts.append(bhtml)
+    if badges and img_url:
+        local = fetch_and_store_image(img_url)
+        if local is not None:
+            src = img_src_for(out_path, local)
+            parts.append(
+                f'<img class="item-img" src="{esc(src)}" alt="{esc(clean_title)}">'
+            )
 
-    # 标题 h4
+    region = region_label(sub)
+    rcls = "badge-intl" if region == "国际" else "badge-domestic"
+    badge_bits = [f'<span class="badge {rcls}">{esc(region)}</span>']
+    ordered = sorted(badges, key=lambda b: BADGE_PRIORITY.get(b, 99))
+    badge_cls = {"重要": "badge-important", "热门": "badge-hot", "实用": "badge-useful"}
+    for b in ordered:
+        badge_bits.append(
+            f'<span class="badge {badge_cls.get(b, "badge-other")}">{esc(b)}</span>'
+        )
+    parts.append('<span class="badges">' + "".join(badge_bits) + "</span>")
+
     if url:
         parts.append(
             f'<h4><a href="{esc(url)}" target="_blank" rel="noopener noreferrer">{esc(clean_title)}</a></h4>'
@@ -458,22 +645,18 @@ def render_item_news(raw_title: str, body: str, sec: str, sub: str, is_feat: boo
     else:
         parts.append(f"<h4>{esc(clean_title)}</h4>")
 
-    # 原文标题副标题
     if orig_title:
         parts.append(f'<p class="title-en">{esc(orig_title)}</p>')
 
-    # 风险
     label, reason = parse_risk(risk)
     if label:
         parts.append(f'<span class="risk">{esc(label)}</span>')
         if reason:
             parts.append(f'<span class="risk-reason">{esc(reason)}</span>')
 
-    # 摘要
     if desc:
         parts.append(f'<p class="desc">{esc(desc)}</p>')
 
-    # 底部：来源·时间 / 打开原文
     source = fields.get("来源", "")
     pub_time = fields.get("发布时间", "")
     time_short = fmt_time_short(pub_time) if pub_time else ""
@@ -486,22 +669,81 @@ def render_item_news(raw_title: str, body: str, sec: str, sub: str, is_feat: boo
         parts.append(f'<span class="source-time">{source_time}</span>')
     if url:
         parts.append(
-            f'<a class="open-link" href="{esc(url)}" target="_blank" rel="noopener noreferrer">打开原文 →</a>'
+            f'<a class="open-link" href="{esc(url)}" target="_blank" rel="noopener noreferrer">看原文</a>'
         )
     parts.append("</div>")
-
     parts.append("</article>")
     return "\n".join(parts)
 
 
-def render_news_content(data: dict) -> tuple[str, str, str]:
-    """返回 (content_html, sec_nav_html, pill_html_str)。"""
+def _merge_sorted_news_items(submap: dict) -> list[tuple[str, str, str]]:
+    """国内条目（原序）再接国际条目，再按标签稳定排序。返回 (title, body, sub)。"""
+    merged: list[tuple[str, str, str]] = []
+    for sub in ("国内", "国际"):
+        for raw_title, body in submap.get(sub) or []:
+            merged.append((raw_title, body, sub))
+
+    def key_fn(item_with_index: tuple[int, tuple[str, str, str]]) -> tuple[int, int]:
+        idx, (raw_title, _body, _sub) = item_with_index
+        badges, _ = extract_badges(raw_title)
+        return (item_priority(badges), idx)
+
+    indexed = list(enumerate(merged))
+    indexed.sort(key=key_fn)
+    return [item for _, item in indexed]
+
+
+def _render_hot_zone(data: dict) -> str:
+    """今日热门：按分类列出带标签条目，每类最多 3 条；无标签分类不出现。"""
+    groups: list[str] = []
+    for sec in NEWS_SECTIONS:
+        submap = data.get("sections", {}).get(sec) or {}
+        tagged: list[tuple[int, int, str, str, str, list[str], str]] = []
+        # 收集顺序：国内再国际，便于同优先级稳定
+        n = 0
+        for sub in ("国内", "国际"):
+            for raw_title, body in submap.get(sub) or []:
+                badges, clean = extract_badges(raw_title)
+                if badges:
+                    tagged.append((item_priority(badges), n, raw_title, body, sub, badges, clean))
+                    n += 1
+        tagged.sort(key=lambda t: (t[0], t[1]))
+        tagged = tagged[:3]
+        if not tagged:
+            continue
+        block = [f'<div class="hot-group">', f'<h3 class="hot-sec">{esc(sec)}</h3>', '<ul class="hot-list">']
+        for _prio, _n, raw_title, body, _sub, badges, clean in tagged:
+            iid = make_item_id(sec, raw_title, body)
+            bhtml = badges_html(badges)
+            block.append(
+                f'<li><a class="hot-link" href="#{esc(iid)}">{bhtml}'
+                f'<span class="hot-text">{esc(clean)}</span></a></li>'
+            )
+        block.append("</ul></div>")
+        groups.append("\n".join(block))
+    if not groups:
+        return '<div id="hot" class="hot-anchor"></div>'
+    return (
+        '<section id="hot" class="hot-zone">\n'
+        '<h2 class="hot-title">今日热门</h2>\n' + "\n".join(groups) + "\n</section>"
+    )
+
+
+def render_news_content(data: dict, out_path: Path | None = None) -> tuple[str, str, str, str]:
+    """返回 (content_html, sec_nav_html, pill_html_str, hot_html)。"""
     pill = pill_html(data.get("status"), data["updated"], data.get("failed", False))
 
     if data["failed"]:
-        return '<p class="fail-panel">本次刷新失败</p>', "", pill
+        return (
+            '<p class="fail-panel">本次刷新失败</p>',
+            "",
+            pill,
+            '<div id="hot" class="hot-anchor"></div>',
+        )
 
-    # 栏目导航
+    cleanup_old_images()
+    hot = _render_hot_zone(data)
+
     sec_links = []
     for sec in NEWS_SECTIONS:
         sid = f"sec-{sec}"
@@ -509,44 +751,50 @@ def render_news_content(data: dict) -> tuple[str, str, str]:
     sec_nav = '<nav class="sec-nav">' + "".join(sec_links) + "</nav>"
 
     parts = ['<div class="sections">']
-    feat_done = False  # 封面任务只做一次
-
-    for sec, submap in data["sections"].items():
+    for sec in NEWS_SECTIONS:
+        submap = data.get("sections", {}).get(sec) or {}
+        items = _merge_sorted_news_items(submap)
         sid = f"sec-{sec}"
         channel_label = _SEC_CHANNEL.get(sec, sec + " Channel")
         parts.append(f'<section id="{sid}">')
         parts.append(f'<div class="section-header">{esc(channel_label)}</div>')
 
-        for sub in ("国内", "国际"):
-            items = submap.get(sub) or []
-            if not items:
-                continue
-            parts.append('<div class="subsection">')
-            if items:
-                # 封面任务：第一个带标签条目（全局最多一次）
-                start_idx = 0
-                if not feat_done and items:
-                    first_badges, _ = extract_badges(items[0][0])
-                    if first_badges:
-                        raw_title, body = items[0]
-                        parts.append(render_item_news(raw_title, body, sec, sub, is_feat=True))
-                        start_idx = 1
-                        feat_done = True
+        if not items:
+            parts.append('<p class="empty">暂无条目</p>')
+            parts.append("</section>")
+            continue
 
-                remaining = items[start_idx:]
-                if remaining:
-                    parts.append('<div class="item-grid">')
-                    for raw_title, body in remaining:
-                        parts.append(render_item_news(raw_title, body, sec, sub))
-                    parts.append("</div>")
-                elif start_idx == 0:
-                    parts.append('<p class="empty">暂无条目</p>')
-            parts.append("</div>")  # subsection
+        tagged = [it for it in items if extract_badges(it[0])[0]]
+        if tagged:
+            visible, hidden = tagged, [it for it in items if not extract_badges(it[0])[0]]
+        else:
+            visible, hidden = items[:3], items[3:]
+
+        parts.append('<div class="item-grid">')
+        for raw_title, body, sub in visible:
+            iid = make_item_id(sec, raw_title, body)
+            parts.append(render_item_news(raw_title, body, sec, sub, iid, out_path))
+        parts.append("</div>")
+
+        if hidden:
+            n = len(hidden)
+            parts.append("<details class=\"more-box\">")
+            if re.fullmatch(r"[A-Za-z0-9]+", sec):
+                more_label = f"更多 {esc(sec)} 资讯（{n}）"
+            else:
+                more_label = f"更多{esc(sec)}资讯（{n}）"
+            parts.append(f"<summary>{more_label}</summary>")
+            parts.append('<div class="item-grid">')
+            for raw_title, body, sub in hidden:
+                iid = make_item_id(sec, raw_title, body)
+                parts.append(render_item_news(raw_title, body, sec, sub, iid, out_path))
+            parts.append("</div>")
+            parts.append("</details>")
 
         parts.append("</section>")
 
     parts.append("</div>")
-    return "\n".join(parts), sec_nav, pill
+    return "\n".join(parts), sec_nav, pill, hot
 
 
 # ── 薅羊毛页渲染 ──────────────────────────────────────────────────────────────
@@ -791,7 +1039,7 @@ def render_page(kind: str, source: Path | None, sample: bool = False, out_path: 
     }
 
     if kind == "news":
-        content, sec_nav, pill = render_news_content(data)
+        content, sec_nav, pill, hot = render_news_content(data, out_path)
         return fill_template(
             "news.html",
             {
@@ -802,6 +1050,7 @@ def render_page(kind: str, source: Path | None, sample: bool = False, out_path: 
                 "updated": esc(data["updated"]),
                 "muse_status": esc("失败" if data.get("failed") else _status_for_meta(data.get("status"))),
                 "pill": pill,
+                "hot": hot,
                 "sec_nav": sec_nav,
                 "content": content,
             },
