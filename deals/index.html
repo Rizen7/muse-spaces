@@ -3,252 +3,665 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>薅羊毛</title>
+  <title>薅羊毛 · 夜市任务板</title>
   <meta name="format-detection" content="telephone=no">
-  <style>/* 公共基础样式。换皮肤时一般保留本文件，改 news.css / deals.css / index.css。 */
-*, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
-body {
-  margin: 0;
-  line-height: 1.6;
-  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans CJK SC", "Noto Sans SC",
-    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  <meta name="muse-updated" content="更新于 2026-11-11 08:09（北京时间）">
+  <meta name="muse-status" content="部分失败">
+  <style>/* D 夜间刊 · 公共基础样式 */
+:root {
+  --bg: #07080d;
+  --card: #12141c;
+  --line: rgba(255,255,255,.10);
+  --text: #f5f7fb;
+  --muted: #c3c8d4;
+  --mint: #3ef0c8;
+  --gold: #ffc44d;
+  --rose: #ff6b81;
+  --blue: #7cb8ff;
+  --sans: "PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",system-ui,-apple-system,sans-serif;
 }
-a { color: inherit; }
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; background: #07080d; }
+html, body { margin: 0; }
+body {
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  font-family: var(--sans);
+  background:
+    radial-gradient(800px 420px at 0% 0%, rgba(62,240,200,.14), transparent 55%) no-repeat,
+    radial-gradient(640px 480px at 100% 10%, rgba(255,196,77,.09), transparent 50%) no-repeat,
+    var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+}
+a { color: inherit; text-decoration: none; }
 img { max-width: 100%; height: auto; }
 
-/* 薅羊毛页样式（简洁像素板）。替换本文件即可换肤，保持下方类名不变。 */
-body {
-  background: #16141a;
-  color: #efe7d1;
-  font-family: "Noto Sans Mono CJK SC", "Noto Sans Mono", ui-monospace, SFMono-Regular,
-    Menlo, Consolas, "Liberation Mono", "PingFang SC", "Microsoft YaHei", monospace;
-}
+/* ── 通用包裹 ── */
 .wrap {
-  max-width: 1440px;
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 16px;
+  padding: 24px 18px 72px;
 }
-@media (min-width: 768px) {
-  .wrap { padding: 24px 32px; }
+@media (max-width: 700px) {
+  .wrap { padding: 16px 14px 56px; }
 }
-.site-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 20px;
-  margin: 0 0 16px;
-  font-size: 13px;
-}
-.site-nav a { color: #d4c9a4; text-decoration: none; }
-.site-nav a:hover { text-decoration: underline; }
-.site-nav a.current { color: #f0d778; font-weight: 700; }
 
-header h1 {
-  margin: 0 0 8px;
-  font-size: 1.45rem;
-  font-weight: 700;
-  color: #f0d778;
-  letter-spacing: 0.04em;
+/* ── 顶部区域 ── */
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-bottom: 20px;
 }
 .kicker {
-  margin: 0 0 4px;
   font-size: 12px;
-  color: #a89868;
-  letter-spacing: 0.12em;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--mint);
+  font-weight: 700;
+  margin: 0 0 4px;
 }
+h1.page-title {
+  margin: 0;
+  font-size: clamp(28px, 5vw, 48px);
+  letter-spacing: -.04em;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* ── 状态胶囊 ── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  background: rgba(18,20,28,.85);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--muted);
+  min-height: 40px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+.pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 10px var(--mint);
+  flex-shrink: 0;
+}
+.pill-dot.warn { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+.pill-dot.fail { background: var(--rose); box-shadow: 0 0 10px var(--rose); }
+
+/* ── 导航按钮条（站内切换：首页/资讯/薅羊毛） ── */
+.site-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 18px;
+}
+.site-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  white-space: nowrap;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--muted);
+  border-radius: 10px;
+  padding: 6px 14px;
+  font-size: 13px;
+  text-decoration: none;
+  transition: border-color .15s;
+}
+.site-nav a:hover { border-color: rgba(255,255,255,.3); color: var(--text); }
+.site-nav a.current {
+  color: #04110d;
+  background: var(--mint);
+  border-color: var(--mint);
+  font-weight: 800;
+}
+
+/* ── 试跑样例横幅 ── */
 .banner-sample {
-  display: inline-block;
-  margin: 0 0 8px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  margin: 0 0 12px;
+  padding: 4px 12px;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  background: rgba(255,196,77,.08);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+/* ── 失败面板 ── */
+.fail-panel {
+  background: rgba(58,18,24,.5);
+  border: 1px solid #7a303c;
+  border-radius: 16px;
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 1.15rem;
+  color: #ffc1c8;
+  font-weight: 700;
+}
+
+/* ── 重点徽章 ── */
+.badges {
+  display: inline-flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .06em;
   padding: 2px 8px;
-  border: 2px solid #f0d778;
-  color: #f0d778;
-  font-size: 13px;
+  border-radius: 6px;
+  line-height: 1.6;
 }
-.updated {
-  margin: 0 0 8px;
-  color: #d4c9a4;
+.badge-important { background: #ff6b81; color: #1a0008; }
+.badge-hot       { background: #ffc44d; color: #1a0d00; }
+.badge-useful    { background: #3ef0c8; color: #001a14; }
+
+/* ── 原文标题副标题 ── */
+.title-en {
   font-size: 13px;
-}
-.status-partial {
-  margin: 0 0 12px;
-  color: #ffb14a;
-  font-size: 13px;
+  color: #9eaabf;
+  line-height: 1.5;
+  margin: 2px 0 8px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
+/* ── 页脚 ── */
+footer {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: #a3aab8;
+  font-size: 12px;
+  line-height: 1.6;
+}
+footer p { margin: 0; }
+
+/* D 夜市任务板 · 薅羊毛页样式 */
+
+/* ── 状态文字（已在 pill 里体现） ── */
+.status-partial { display: none; }
+
+/* ── 筛选标签条（全部任务/白嫖/限免/…） ── */
+.tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 20px;
+}
+.tabs button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  white-space: nowrap;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--muted);
+  border-radius: 10px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color .15s, background .15s, color .15s;
+}
+.tabs button:hover { border-color: rgba(255,255,255,.3); color: var(--text); }
+.tabs button.on {
+  color: #04110d;
+  background: var(--mint);
+  border-color: var(--mint);
+  font-weight: 800;
+}
+
+/* ── 任务网格 ── */
 .boards {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-@media (min-width: 768px) {
-  .boards { grid-template-columns: 1fr 1fr; gap: 18px; }
-}
-@media (min-width: 1100px) {
-  .boards { grid-template-columns: 1fr 1fr 1fr; }
-}
-@media (min-width: 1360px) {
-  .boards { grid-template-columns: repeat(5, 1fr); }
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
-.board {
-  border: 3px solid #c9a227;
-  background: #1d1b24;
-  padding: 12px;
-  box-shadow: 4px 4px 0 #050508;
-}
-.board h2 {
-  margin: 0 0 12px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #c9a227;
-  font-size: 1rem;
-  color: #f0d778;
+.board { /* 每个栏目（白嫖/限免/…） */
+  display: flex;
+  flex-direction: column;
 }
 
-.item {
+.board-header {
+  font-size: 12px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
   margin: 0 0 14px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid #3a362c;
+  font-weight: 700;
 }
-.item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
-.item h3 { margin: 0 0 6px; font-size: 15px; line-height: 1.45; }
-.item h3 a { color: #fff4cc; text-decoration: none; }
-.item h3 a:hover { text-decoration: underline; }
-.item .desc { margin: 0 0 8px; font-size: 13px; color: #ddd6bf; }
-.fields { margin: 0; font-size: 12px; }
+
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (max-width: 700px) {
+  .board-grid { grid-template-columns: 1fr; }
+}
+
+/* ── 任务卡片 ── */
+.item {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color .15s;
+}
+.item:hover { border-color: rgba(255,255,255,.25); }
+
+/* 栏目标签（白嫖/限免/低价/…） */
+.cat-tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-bottom: 7px;
+}
+.cat-tag.free    { background: #0f3d34; color: var(--mint); }
+.cat-tag.limited { background: #3d2f0c; color: var(--gold); }
+.cat-tag.deal    { background: #132a44; color: var(--blue); }
+.cat-tag.airdrop,
+.cat-tag.nft     { background: #3a1218; color: var(--rose); }
+
+/* 标题 */
+.item h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+.item h3 a { color: var(--text); text-decoration: none; }
+.item h3 a:hover { color: var(--mint); }
+
+/* 原文标题副标题 */
+.title-en {
+  font-size: 13px;
+  color: #9eaabf;
+  line-height: 1.5;
+  margin: 2px 0 8px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 价格行 */
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 4px 0 8px;
+}
+.price-main {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--mint);
+  letter-spacing: -.02em;
+  line-height: 1.3;
+}
+.price-main.price-long {
+  font-size: 18px;
+}
+.price-was {
+  color: #a3aab8;
+  text-decoration: line-through;
+  font-size: 14px;
+}
+.price-orig, .price-note {
+  margin: 2px 0 8px;
+  font-size: 14px;
+  color: #a3aab8;
+  line-height: 1.6;
+}
+.price-free { color: var(--mint); }
+
+/* 摘要 */
+.item .desc {
+  margin: 0 0 8px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+/* 字段（门槛/截止/费用/反馈） */
+.fields {
+  margin: 0 0 6px;
+  font-size: 14px;
+  line-height: 1.6;
+}
 .fields div { margin: 0 0 4px; }
 .fields dt {
   display: inline;
-  color: #a89868;
+  color: #9eaabf;
   font-weight: 700;
 }
-.fields dd { display: inline; margin: 0; color: #efe7d1; }
-.item .source { margin: 6px 0 0; font-size: 12px; color: #a89868; }
-
-.risk {
-  display: inline-block;
-  margin: 0 0 8px;
-  padding: 3px 8px;
-  background: #d10f0f;
-  color: #fff;
-  font-weight: 700;
-  border: 2px solid #ff6b6b;
-  letter-spacing: 0.04em;
-}
-.risk-reason { display: block; margin: 0 0 8px; font-size: 12px; color: #ffb4b4; }
-.empty { margin: 0; color: #8a8370; font-size: 13px; }
-
-.fail-panel {
-  border: 3px solid #c9a227;
-  background: #1d1b24;
-  padding: 32px 16px;
-  text-align: center;
-  font-size: 1.2rem;
-  color: #ffb14a;
+.fields dd {
+  display: inline;
+  margin: 0;
+  color: var(--muted);
+  overflow-wrap: anywhere;
 }
 
-footer {
-  margin-top: 28px;
-  padding-top: 16px;
-  border-top: 2px solid #3a362c;
-  color: #8a8370;
+/* 来源行 */
+.source {
   font-size: 12px;
+  color: #a3aab8;
+  margin: 4px 0 0;
 }
-footer p { margin: 0; }
+
+/* 风险提示 */
+.risk {
+  background: rgba(58,18,24,.7);
+  color: #ffc1c8;
+  border: 1px solid #7a303c;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  margin: 4px 0 6px;
+  display: block;
+}
+.risk-reason {
+  display: block;
+  font-size: 12px;
+  color: #ffb4b4;
+  margin: 0 0 6px;
+}
+
+/* 重点徽章（继承自 common，补充定义避免遗漏） */
+.badges {
+  display: inline-flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  padding: 2px 8px;
+  border-radius: 6px;
+  line-height: 1.6;
+}
+.badge-important { background: #ff6b81; color: #1a0008; }
+.badge-hot       { background: #ffc44d; color: #1a0d00; }
+.badge-useful    { background: #3ef0c8; color: #001a14; }
+
+/* 底部：来源 + 领取按钮 */
+.item-foot {
+  margin-top: auto;
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: #a3aab8;
+}
+.item-foot .source-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* 领取/查看按钮 */
+.open-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+  transition: border-color .15s, color .15s;
+  flex-shrink: 0;
+}
+.open-link:hover { border-color: var(--mint); color: var(--mint); }
+
+.empty { margin: 0; color: #a3aab8; font-size: 14px; font-style: italic; }
+
+/* 封面任务 */
+.feat-item {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(62,240,200,.35);
+  background:
+    linear-gradient(135deg, rgba(62,240,200,.10), transparent 40%),
+    var(--card);
+  border-radius: 18px;
+  padding: 22px 22px 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 16px 40px rgba(0,0,0,.35);
+}
+.feat-item h3 {
+  max-width: 820px;
+  margin: 6px 0 10px;
+  font-size: clamp(20px, 3vw, 32px);
+  line-height: 1.25;
+  letter-spacing: -.03em;
+  font-weight: 800;
+}
+.feat-item .desc {
+  max-width: 760px;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.feat-item .item-foot { width: 100%; }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <nav class="site-nav"><a href="../">首页</a><a href="../news/">国内外资讯</a><a href="./" class="current">薅羊毛</a></nav>
-
-      <p class="kicker">QUEST BOARD</p>
-      <h1>薅羊毛</h1>
-      <p class="banner-sample">试跑样例</p>
-
-      <p class="updated">更新于 2026-11-10 23:42（北京时间）</p>
-      <p class="status-partial">状态：部分失败</p>
-
+    <nav class="site-nav"><a href="../">首页</a><a href="../news/">国内外资讯</a><a href="./" class="current">薅羊毛</a></nav>
+    <header class="top">
+      <div>
+        <div class="kicker">Night Market · Quest Board</div>
+        <h1 class="page-title">薅羊毛</h1>
+      </div>
+      <div class="pill"><span class="pill-dot warn"></span>部分失败 · 11-11 08:09 北京时间</div>
     </header>
+    
+    <div class="tabs" id="tabs"><button type="button" class="on" data-cat="all">全部任务</button><button type="button" data-cat="白嫖">白嫖</button><button type="button" data-cat="限免">限免</button><button type="button" data-cat="低价">低价</button><button type="button" data-cat="币圈空投">币圈空投</button><button type="button" data-cat="NFT">NFT</button></div>
     <main>
-      <div class="boards">
-<section class="board" id="sec-白嫖">
-<h2>白嫖</h2>
-<article class="item">
+      <div class="boards" id="board">
+<section class="board" data-sec="白嫖">
+<div class="board-header">白嫖</div>
+<article class="feat-item" data-tags="useful" data-cat="白嫖">
+<div class="cat-tag free">白嫖</div>
+<span class="badges"><span class="badge badge-useful">实用</span></span>
 <h3><a href="https://www.appinn.com/xiaoyu-shift-calendar-free/" target="_blank" rel="noopener noreferrer">小渔排班宣布永久免费：开发了 8 年的轮班日历，无广告、无订阅</a></h3>
-<p class="desc">面向倒班、轮班工作者的日历应用，开发者宣布从 2026 年 10 月起永久免费开放全部功能，无广告、无订阅，仅保留自愿支持选项</p>
-<dl class="fields"><div><dt>价格</dt>：<dd>2019 年介绍时售价 1 元 / 现价免费</dd></div><div><dt>截止时间</dt>：<dd>未写明（原文写永久免费）</dd></div><div><dt>门槛</dt>：<dd>需 Apple ID，在 App Store 下载；支持 iPhone、iPad、Apple Watch</dd></div></dl>
-<p class="source">来源：小众软件</p>
+<div class="price-row"><span class="price-main">免费</span><span class="price-was">早年售价 1 元</span></div>
+<p class="desc">面向倒班、轮班工作者的日历应用，开发者宣布永久免费开放全部功能，无广告、无订阅，仅保留自愿支持选项</p>
+<dl class="fields"><div><dt>截止时间</dt>：<dd>未写明（原文写永久免费）</dd></div><div><dt>门槛</dt>：<dd>需 Apple ID，在 App Store 下载；支持 iPhone、iPad、Apple Watch</dd></div></dl>
+<div class="item-foot">
+<span class="source-name">小众软件</span>
+<a class="open-link" href="https://www.appinn.com/xiaoyu-shift-calendar-free/" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
+</div>
 </article>
-<article class="item">
-<h3><a href="https://www.hotukdeals.com/deals/free-large-sea-salt-shaker-lidl-plus-app-5028443" target="_blank" rel="noopener noreferrer">Free Batts Fine or Coarse Sea Salt Shaker via Lidl Plus app - selected accounts</a></h3>
-<p class="desc">英国 Lidl 通过 Lidl Plus 应用送出 Batts 细盐或粗盐罐，页面价为免费</p>
-<dl class="fields"><div><dt>价格</dt>：<dd>免费</dd></div><div><dt>截止时间</dt>：<dd>2026-11-12 07:59（北京时间，按帖文 endDate 换算），剩余约 1 天 8 小时</dd></div><div><dt>门槛</dt>：<dd>需英国 Lidl Plus 应用账号；标题写明仅限部分账号（selected accounts）；帖文标注全国性，但正文几乎没有领取步骤说明</dd></div></dl>
-<p class="source">来源：HotUKDeals</p>
+<div class="board-grid">
+<article class="item" data-tags="" data-cat="白嫖">
+<div class="cat-tag free">白嫖</div>
+<h3><a href="https://www.hotukdeals.com/deals/free-large-sea-salt-shaker-lidl-plus-app-5028443" target="_blank" rel="noopener noreferrer">Lidl Plus 应用免费领 Batts 细盐或粗盐罐（仅部分账号）</a></h3>
+<p class="title-en">Free Batts Fine or Coarse Sea Salt Shaker via Lidl Plus app - selected accounts 英国 Lidl 通过 Lidl Plus 应用向部分账号送出 Batts 细盐或粗盐罐，页面价为免费</p>
+<div class="price-row"><span class="price-main">免费</span></div>
+<dl class="fields"><div><dt>截止时间</dt>：<dd>未写明（帖子原先的结束时间已被移除）</dd></div><div><dt>门槛</dt>：<dd>需英国 Lidl Plus 应用账号，仅限英国；标题写明仅部分账号可领；帖子发布于 2026-11-10 23:27（北京时间），已约 9 小时，可能已领完</dd></div></dl>
+<div class="item-foot">
+<span class="source-name">HotUKDeals</span>
+<a class="open-link" href="https://www.hotukdeals.com/deals/free-large-sea-salt-shaker-lidl-plus-app-5028443" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
+</div>
 </article>
+</div>
 </section>
-<section class="board" id="sec-限免">
-<h2>限免</h2>
-<article class="item">
-<h3><a href="https://www.hotukdeals.com/deals/100-free-microsoft-certification-exam-vouchers-dp-600-dp-700-dp-800-5028433" target="_blank" rel="noopener noreferrer">100% FREE Microsoft Certification Exam Vouchers (DP-600, DP-700, DP-800)</a></h3>
-<p class="desc">微软 Data Days 活动再次发放认证考试优惠：DP-600、DP-700、DP-800 可申请 100% 免考费券；另有 PL-300 等科目 50% 折扣（本条只记全免档）</p>
-<dl class="fields"><div><dt>价格</dt>：<dd>原价未在帖中列出具体英镑金额 / 全免档到手免费</dd></div><div><dt>截止时间</dt>：<dd>帖文活动结束为 2026-12-16 06:59（北京时间），剩余约 35 天 7 小时；原文还写明，领取后须在 2026-11-30 或 2026-12-31 前完成考试（视所选科目），逾期不延期</dd></div><div><dt>门槛</dt>：<dd>需免费注册并登录 Microsoft Fabric Community 账号；每人限 1 张，数量有限先到先得；须填写申请表；兑换码通过 Fabric 论坛站内私信发放，不会发到邮箱</dd></div></dl>
-<p class="source">来源：HotUKDeals</p>
+<section class="board" data-sec="限免">
+<div class="board-header">限免</div>
+<div class="board-grid">
+<article class="item" data-tags="useful" data-cat="限免">
+<div class="cat-tag limited">限免</div>
+<span class="badges"><span class="badge badge-useful">实用</span></span>
+<h3><a href="https://www.hotukdeals.com/deals/100-free-microsoft-certification-exam-vouchers-dp-600-dp-700-dp-800-5028433" target="_blank" rel="noopener noreferrer">微软认证考试免费券（DP-600、DP-700、DP-800）</a></h3>
+<p class="title-en">100% FREE Microsoft Certification Exam Vouchers (DP-600, DP-700, DP-800) 微软 Data Days 活动发放认证考试优惠：DP-600、DP-700、DP-800 可申请全免考试券；另有部分科目半价（本条只记全免档）</p>
+<div class="price-row"><span class="price-main">全免档到手免费</span></div>
+<p class="price-orig">原价：帖中未列出具体金额</p>
+<dl class="fields"><div><dt>截止时间</dt>：<dd>2026-12-16 06:59（北京时间），剩余约 34 天 22 小时；领取后须在 2026-11-30 或 2026-12-31 前完成考试（视科目而定）</dd></div><div><dt>门槛</dt>：<dd>需免费注册并登录 Microsoft Fabric Community 账号；每人限 1 张，数量有限先到先得；须填写申请表；兑换码通过 Fabric 论坛站内私信发放</dd></div></dl>
+<div class="item-foot">
+<span class="source-name">HotUKDeals</span>
+<a class="open-link" href="https://www.hotukdeals.com/deals/100-free-microsoft-certification-exam-vouchers-dp-600-dp-700-dp-800-5028433" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
+</div>
 </article>
+</div>
 </section>
-<section class="board" id="sec-低价">
-<h2>低价</h2>
-<article class="item">
-<h3><a href="https://sspai.com/post/118799" target="_blank" rel="noopener noreferrer">OneSwitch 单设备版限时降价</a></h3>
-<p class="desc">少数派双十一软件促销中，Mac 菜单栏快捷开关工具 One Switch 单设备版直接标出原价与现价</p>
-<dl class="fields"><div><dt>价格</dt>：<dd>原价 30.00 元 / 到手价 18.00 元</dd></div><div><dt>截止时间</dt>：<dd>未写明（活动页写明自 2026-11-09 起，持续时间以具体产品页面为准）</dd></div><div><dt>门槛</dt>：<dd>在少数派商店购买，需少数派账号；原文未要求付费会员才能买该软件</dd></div></dl>
-<p class="source">来源：少数派</p>
+<section class="board" data-sec="低价">
+<div class="board-header">低价</div>
+<div class="board-grid">
+<article class="item" data-tags="" data-cat="低价">
+<div class="cat-tag deal">低价</div>
+<h3><a href="https://sspai.com/post/118799" target="_blank" rel="noopener noreferrer">One Switch 单设备版限时降价</a></h3>
+<div class="price-row"><span class="price-main">18.00 元</span><span class="price-was">30.00 元</span></div>
+<p class="desc">少数派双十一软件促销中，Mac 菜单栏快捷开关工具 One Switch 单设备版直接标出原价与现价（另有满 50 减 10 元券，未计入）</p>
+<dl class="fields"><div><dt>截止时间</dt>：<dd>未写明</dd></div><div><dt>门槛</dt>：<dd>在少数派商店购买，需少数派账号；原文未要求付费会员</dd></div></dl>
+<div class="item-foot">
+<span class="source-name">少数派</span>
+<a class="open-link" href="https://sspai.com/post/118799" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
+</div>
 </article>
-<article class="item">
+<article class="item" data-tags="" data-cat="低价">
+<div class="cat-tag deal">低价</div>
 <h3><a href="https://sspai.com/post/118612" target="_blank" rel="noopener noreferrer">口袋先知双十一立减</a></h3>
+<div class="price-row"><span class="price-main">119 元</span><span class="price-was">129 元</span></div>
+<p class="price-note">页面写立减 10 元，未叠券</p>
 <p class="desc">少数派与思维重置共创的随身墨水屏「Rand/0 口袋先知」，活动页同时给出日常售价和立减幅度</p>
-<dl class="fields"><div><dt>价格</dt>：<dd>原价 129 元 / 到手价 119 元（页面写立减 10 元，未再叠券）</dd></div><div><dt>截止时间</dt>：<dd>原文写即日起至 2026-11-11，未写具体时刻，按当天 23:59（北京时间）估算，剩余约 1 天</dd></div><div><dt>门槛</dt>：<dd>在少数派商店购买，需少数派账号；原文未写限地区或限量</dd></div></dl>
-<p class="source">来源：少数派</p>
+<dl class="fields"><div><dt>截止时间</dt>：<dd>原文写至 2026-11-11，未写具体时刻，按今天 23:59（北京时间）估算，剩余约 15 小时</dd></div><div><dt>门槛</dt>：<dd>在少数派商店购买，需少数派账号；原文未写限地区或限量</dd></div></dl>
+<div class="item-foot">
+<span class="source-name">少数派</span>
+<a class="open-link" href="https://sspai.com/post/118612" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
+</div>
 </article>
-<article class="item">
-<h3><a href="https://slickdeals.net/f/20283795-30-62-casio-aw80-series-40mm-men-s-analog-digital-watch-at-amazon" target="_blank" rel="noopener noreferrer">Casio AW80 Series 40mm Men’s Analog-Digital Watch</a></h3>
-<p class="desc">美国亚马逊在售卡西欧 AW-80D-1AV 40 毫米男表</p>
-<dl class="fields"><div><dt>价格</dt>：<dd>原价 55 美元 / 到手价 30.62 美元（约合 205 元人民币，按 open.er-api.com 2026-11-10 汇率 1 美元约 6.69 元，低于 2000 元门槛）</dd></div><div><dt>截止时间</dt>：<dd>未写明</dd></div><div><dt>门槛</dt>：<dd>美国亚马逊页面；满 35 美元或拥有 Prime 可免运费，Prime 不是唯一免运条件</dd></div></dl>
-<p class="source">来源：Slickdeals</p>
+<article class="item" data-tags="" data-cat="低价">
+<div class="cat-tag deal">低价</div>
+<h3><a href="https://slickdeals.net/f/20286318-47-99-256gb-samsung-p9-express-microsd-express-card-at-amazon" target="_blank" rel="noopener noreferrer">三星 P9 Express 256GB microSD Express 存储卡</a></h3>
+<p class="title-en">256GB Samsung P9 Express microSD Express Card $48 + Free S&amp;H 美国亚马逊在售三星 P9 Express（MB-MK256T/AM）256GB 存储卡，免运费</p>
+<div class="price-row"><span class="price-main">47.99 美元</span><span class="price-was">79.99 美元</span></div>
+<p class="price-note">约合 321 元人民币，按 2026-11-10 汇率 1 美元约 6.69 元估算</p>
+<dl class="fields"><div><dt>截止时间</dt>：<dd>未写明</dd></div><div><dt>门槛</dt>：<dd>美国亚马逊；原文未要求付费会员</dd></div></dl>
+<div class="item-foot">
+<span class="source-name">Slickdeals</span>
+<a class="open-link" href="https://slickdeals.net/f/20286318-47-99-256gb-samsung-p9-express-microsd-express-card-at-amazon" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
+</div>
 </article>
-<article class="item">
-<h3><a href="https://slickdeals.net/f/20283333-10-98-klein-tools-rt210-gfci-and-standard-ac-outlet-tester-lowe-s-amazon" target="_blank" rel="noopener noreferrer">Klein Tools GFCI Outlet Tester</a></h3>
-<p class="desc">美国亚马逊和 Lowe&#x27;s 均有 Klein Tools RT210 插座检测仪</p>
-<dl class="fields"><div><dt>价格</dt>：<dd>原价 14 美元 / 到手价 10.98 美元（约合 73 元人民币，同样按上述汇率，低于 2000 元门槛）</dd></div><div><dt>截止时间</dt>：<dd>未写明</dd></div><div><dt>门槛</dt>：<dd>美国亚马逊或 Lowe&#x27;s；亚马逊满 35 美元或 Prime 可免运费</dd></div></dl>
-<p class="source">来源：Slickdeals</p>
+<article class="item" data-tags="" data-cat="低价">
+<div class="cat-tag deal">低价</div>
+<h3><a href="https://slickdeals.net/f/20283795-30-62-casio-aw80-series-40mm-men-s-analog-digital-watch-at-amazon" target="_blank" rel="noopener noreferrer">卡西欧 AW80 系列 40mm 男士指针数字双显腕表</a></h3>
+<p class="title-en">Casio AW80 Series 40mm Men’s Analog-Digital Watch 美国亚马逊在售卡西欧 AW-80D-1AV 40 毫米男表</p>
+<div class="price-row"><span class="price-main">30.62 美元</span><span class="price-was">54.95 美元</span></div>
+<p class="price-note">约合 205 元人民币，同上汇率</p>
+<dl class="fields"><div><dt>截止时间</dt>：<dd>未写明</dd></div><div><dt>门槛</dt>：<dd>美国亚马逊；满 35 美元或拥有 Prime 可免运费，Prime 不是必需</dd></div></dl>
+<div class="item-foot">
+<span class="source-name">Slickdeals</span>
+<a class="open-link" href="https://slickdeals.net/f/20283795-30-62-casio-aw80-series-40mm-men-s-analog-digital-watch-at-amazon" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
+</div>
 </article>
-<article class="item">
-<h3><a href="https://slickdeals.net/f/20281923-men-s-adidas-dayready-open-hem-elastic-trackpants-w-drawcord-black-14-40-free-s-h" target="_blank" rel="noopener noreferrer">Men&#x27;s adidas Dayready Open Hem Elastic Trackpants w/ Drawcord (Black)</a></h3>
-<p class="desc">eBay 上的 adidas 官方店在售黑色 Dayready 运动裤</p>
-<dl class="fields"><div><dt>价格</dt>：<dd>原价 45 美元 / 到手价 18 美元（页面另有券码可再减，按规则不把券后 14.40 美元当作到手价；约合 120 元人民币，低于 2000 元门槛）</dd></div><div><dt>截止时间</dt>：<dd>原文写 2026-11-15 或售完为止，未写具体时刻，按当天 23:59（北京时间）估算，剩余约 5 天</dd></div><div><dt>门槛</dt>：<dd>美国 eBay；仅黑色款享受该价；原文未要求付费会员</dd></div></dl>
-<p class="source">来源：Slickdeals</p>
+<article class="item" data-tags="" data-cat="低价">
+<div class="cat-tag deal">低价</div>
+<h3><a href="https://slickdeals.net/f/20283333-10-98-klein-tools-rt210-gfci-and-standard-ac-outlet-tester-lowe-s-amazon" target="_blank" rel="noopener noreferrer">Klein Tools 漏电保护插座检测仪</a></h3>
+<p class="title-en">Klein Tools GFCI Outlet Tester 美国亚马逊在售 Klein Tools RT210 插座检测仪</p>
+<div class="price-row"><span class="price-main">10.98 美元</span><span class="price-was">13.98 美元</span></div>
+<p class="price-note">约合 73 元人民币，同上汇率</p>
+<dl class="fields"><div><dt>截止时间</dt>：<dd>未写明</dd></div><div><dt>门槛</dt>：<dd>美国亚马逊；满 35 美元或 Prime 可免运费</dd></div></dl>
+<div class="item-foot">
+<span class="source-name">Slickdeals</span>
+<a class="open-link" href="https://slickdeals.net/f/20283333-10-98-klein-tools-rt210-gfci-and-standard-ac-outlet-tester-lowe-s-amazon" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
+</div>
 </article>
+<article class="item" data-tags="" data-cat="低价">
+<div class="cat-tag deal">低价</div>
+<h3><a href="https://slickdeals.net/f/20281923-men-s-adidas-dayready-open-hem-elastic-trackpants-w-drawcord-black-14-40-free-s-h" target="_blank" rel="noopener noreferrer">adidas Dayready 男士束脚运动裤（黑色）</a></h3>
+<p class="title-en">Men&#x27;s adidas Dayready Open Hem Elastic Trackpants w/ Drawcord (Black) eBay 上的 adidas 官方店在售黑色 Dayready 运动裤</p>
+<div class="price-row"><span class="price-main">18 美元</span><span class="price-was">45 美元</span></div>
+<p class="price-note">页面另有券码可再减，按规则不把券后 14.40 美元当到手价；约合 120 元人民币</p>
+<dl class="fields"><div><dt>截止时间</dt>：<dd>原文写 2026-11-15 或售完为止，未写具体时刻，按当天 23:59（北京时间）估算，剩余约 4 天 15 小时</dd></div><div><dt>门槛</dt>：<dd>美国 eBay；仅黑色款；原文未要求付费会员</dd></div></dl>
+<div class="item-foot">
+<span class="source-name">Slickdeals</span>
+<a class="open-link" href="https://slickdeals.net/f/20281923-men-s-adidas-dayready-open-hem-elastic-trackpants-w-drawcord-black-14-40-free-s-h" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
+</div>
+</article>
+</div>
 </section>
-<section class="board" id="sec-币圈空投">
-<h2>币圈空投</h2>
-<article class="item">
-<h3><a href="https://www.binance.com/en/support/announcement/0ea740cbfca045ed935964f4555dc689" target="_blank" rel="noopener noreferrer">Word of the Day: Test Your Knowledge on “Choose Your Binance AI” to Unlock BNB Rewards!</a></h3>
-<span class="risk">⚠ 风险高</span>
-<span class="risk-reason">未见网友真实领到反馈</span>
-<p class="desc">币安新一期 Word of the Day 答题活动，主题为 Choose Your Binance AI，答对题可瓜分 BNB 奖励</p>
-<dl class="fields"><div><dt>价格</dt>：<dd>免费参加（答题本身不收费）</dd></div><div><dt>截止时间</dt>：<dd>2026-11-09 00:00 至 2026-11-15 23:59（UTC），合北京时间 2026-11-16 07:59 结束，剩余约 5 天 8 小时；奖励须在 2026-11-29 23:59（UTC）前发放到 Rewards Hub</dd></div><div><dt>门槛</dt>：<dd>需登录币安账号；原文写明欧洲经济区（EEA）用户不可用，并提示部分地区可能没有该服务；活动期内每天最多玩 2 局，至少答对 5 题才可平分 4 BNB 奖池；若再完成等值 50 美元非零手续费交易或等值 30 美元 NEWT 交易，可按正确题数占比分享 10 BNB 奖池，单人上限 0.01 BNB</dd></div><div><dt>费用</dt>：<dd>在币安站内账户完成，原文未要求连接链上钱包，也未写 Gas；若参加交易任务会产生交易手续费，原文未给出固定金额</dd></div><div><dt>反馈</dt>：<dd>官方公告页无用户到账评论或第三方确认链接</dd></div></dl>
-<p class="source">来源：币安公告</p>
+<section class="board" data-sec="币圈空投">
+<div class="board-header">币圈空投</div>
+<div class="board-grid">
+<article class="item" data-tags="" data-cat="币圈空投">
+<div class="cat-tag airdrop">币圈空投</div>
+<h3><a href="https://www.binance.com/en/support/announcement/0ea740cbfca045ed935964f4555dc689" target="_blank" rel="noopener noreferrer">币安每日一词：答「Choose Your Binance AI」主题题目瓜分 BNB 奖励</a></h3>
+<p class="title-en">Word of the Day: Test Your Knowledge on “Choose Your Binance AI” to Unlock BNB Rewards! 币安 Word of the Day 答题活动，答对题可瓜分 BNB 奖池</p>
+<div class="price-row"><span class="price-main">免费参加</span></div>
+<div class="risk">⚠ ⚠ 风险高（未见网友真实领到反馈）</div>
+<dl class="fields"><div><dt>截止时间</dt>：<dd>2026-11-16 07:59（北京时间），剩余约 4 天 23 小时；奖励在 2026-11-30 07:59（北京时间）前发到 Rewards Hub</dd></div><div><dt>门槛</dt>：<dd>需登录币安账号；欧洲经济区（EEA）用户不可用，部分地区可能没有该服务；每天最多玩 2 局，至少答对 5 题可平分 4 BNB 奖池；另完成等值 50 美元非零手续费交易或等值 30 美元 NEWT 交易，可分 10 BNB 奖池，单人上限 0.01 BNB</dd></div><div><dt>费用</dt>：<dd>在币安站内完成，不需连接链上钱包，无 Gas；参加交易任务会产生交易手续费，原文未给固定金额</dd></div><div><dt>反馈</dt>：<dd>官方公告页无用户到账评论，未找到第三方确认</dd></div></dl>
+<div class="item-foot">
+<span class="source-name">币安公告</span>
+<a class="open-link" href="https://www.binance.com/en/support/announcement/0ea740cbfca045ed935964f4555dc689" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
+</div>
 </article>
+<article class="item" data-tags="" data-cat="币圈空投">
+<div class="cat-tag airdrop">币圈空投</div>
+<h3><a href="https://www.binance.com/en/support/announcement/6b80fb6b884e4f5bb60be4ec475d6190" target="_blank" rel="noopener noreferrer">币安学院比特币页：新用户答题领 BTC 代币券（11 月补货）</a></h3>
+<p class="title-en">Binance Academy Bitcoin Page: Complete Quiz to Earn BTC Rewards This November 2026! 币安学院 Learn &amp; Earn 比特币答题奖励 11 月补货，全对可领 0.00001 BTC 代币券</p>
+<div class="price-row"><span class="price-main">免费参加</span></div>
+<div class="risk">⚠ ⚠ 风险高（未见网友确认领到）</div>
+<dl class="fields"><div><dt>截止时间</dt>：<dd>未写明（原文写自 2026-11-01 08:00 北京时间起，持续至另行通知；每月发完即止）</dd></div><div><dt>门槛</dt>：<dd>仅限 2026-11-01 08:00（北京时间）之后注册的币安新用户，须完成实名认证（KYC）；每月限前 5000 名，先到先得，公告发布于今天约 08:00（北京时间）；每人限领一次；代币券 48 小时内发放，有效期 14 天；部分地区可能不可用</dd></div><div><dt>费用</dt>：<dd>站内完成，不需连接钱包，无 Gas</dd></div><div><dt>反馈</dt>：<dd>未找到网友领取反馈，奖励金额很小</dd></div></dl>
+<div class="item-foot">
+<span class="source-name">币安公告</span>
+<a class="open-link" href="https://www.binance.com/en/support/announcement/6b80fb6b884e4f5bb60be4ec475d6190" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
+</div>
+</article>
+</div>
 </section>
-<section class="board" id="sec-NFT">
-<h2>NFT</h2>
-<article class="item">
+<section class="board" data-sec="NFT">
+<div class="board-header">NFT</div>
+<div class="board-grid">
+<article class="item" data-tags="" data-cat="NFT">
+<div class="cat-tag nft">NFT</div>
 <h3><a href="https://nftcalendar.io/event/jpegz-nft/" target="_blank" rel="noopener noreferrer">JPEGZ</a></h3>
-<span class="risk">⚠ 风险高</span>
-<span class="risk-reason">项目新、无人确认领取</span>
-<p class="desc">NFT Calendar 当日活动：JPEGZ 在 2026-11-10 至 2026-11-17 于以太坊 / OpenSea 开放，页面写 Free to claim</p>
-<dl class="fields"><div><dt>价格</dt>：<dd>免费领取（不含链上费用）</dd></div><div><dt>截止时间</dt>：<dd>2026-11-17，原文未写具体时刻，按当天 23:59（北京时间）估算，剩余约 7 天</dd></div><div><dt>门槛</dt>：<dd>需使用以太坊钱包在铸造站领取；原文未写持仓或白名单要求</dd></div><div><dt>费用</dt>：<dd>原文未给出 Gas 或平台费金额，领取时需自付以太坊 Gas</dd></div><div><dt>反馈</dt>：<dd>仅见「提交者在 Discord 自称已验证铸造站」，未见网友领到、实际花费或打假反馈</dd></div></dl>
-<p class="source">来源：NFT Calendar</p>
+<div class="price-row"><span class="price-main">免费领取</span></div>
+<p class="price-note">不含链上费用</p>
+<div class="risk">⚠ ⚠ 风险高（项目新、无人确认领取）</div>
+<p class="desc">NFT Calendar 活动：JPEGZ 在 2026-11-10 至 2026-11-17 于以太坊 / OpenSea 开放，页面写免费领取（Free to claim）</p>
+<dl class="fields"><div><dt>截止时间</dt>：<dd>2026-11-17，原文未写具体时刻，按当天 23:59（北京时间）估算，剩余约 6 天 15 小时</dd></div><div><dt>门槛</dt>：<dd>需使用以太坊钱包在铸造站领取；原文未写持仓或白名单要求</dd></div><div><dt>费用</dt>：<dd>原文未给出 Gas 或平台费金额，领取时需自付以太坊 Gas</dd></div><div><dt>反馈</dt>：<dd>仅见提交者在 Discord 自称已验证铸造站，未见网友领到、实际花费或打假反馈</dd></div></dl>
+<div class="item-foot">
+<span class="source-name">NFT Calendar</span>
+<a class="open-link" href="https://nftcalendar.io/event/jpegz-nft/" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
+</div>
 </article>
+</div>
 </section>
 </div>
     </main>
@@ -256,5 +669,22 @@ footer p { margin: 0; }
       <p>内容仅供参考，请以原文为准。标有「⚠ 风险高」的条目请谨慎对待。</p>
     </footer>
   </div>
+  <script>
+(function(){
+  var tabs=document.getElementById('tabs');
+  var board=document.getElementById('board');
+  if(!tabs||!board) return;
+  var items=[].slice.call(board.querySelectorAll('[data-cat]'));
+  tabs.addEventListener('click',function(e){
+    var b=e.target;
+    if(b.tagName!=='BUTTON') return;
+    [].forEach.call(tabs.querySelectorAll('button'),function(x){x.classList.toggle('on',x===b);});
+    var cat=b.dataset.cat;
+    items.forEach(function(t){
+      t.style.display=(cat==='all'||t.dataset.cat===cat)?'':'none';
+    });
+  });
+})();
+</script>
 </body>
 </html>
