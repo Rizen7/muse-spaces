@@ -4,6 +4,125 @@
 /* ── 状态文字（已在 pill 里体现） ── */
 .status-partial { display: none; }
 
+/* ── 平滑滚动 / 底部留白（避免 FAB 遮挡） ── */
+html { scroll-behavior: smooth; }
+.wrap { padding-bottom: 120px; }
+@media (max-width: 700px) {
+  .wrap { padding-bottom: 120px; }
+  .item-foot { padding-right: 60px; }
+}
+
+/* ── 今日热门区 ── */
+.hot-zone {
+  margin: 0 0 20px;
+  padding: 18px 16px 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+.hot-title {
+  margin: 0 0 14px;
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+.hot-group { margin: 0 0 10px; }
+.hot-sec {
+  font-size: 12px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 4px;
+  font-weight: 700;
+}
+.hot-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.hot-list li + li { margin-top: 10px; }
+.hot-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex-wrap: nowrap;
+  min-height: 44px;
+  padding: 6px 2px;
+  color: var(--text);
+  text-decoration: none;
+}
+.hot-link .badges { flex: 0 0 auto; margin-top: 2px; }
+.hot-link:hover .hot-text { color: var(--mint); }
+.hot-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+  font-weight: 650;
+}
+.hot-anchor { height: 0; overflow: hidden; }
+
+/* ── 卡片锚点高亮 ── */
+.item { scroll-margin-top: 16px; }
+.item:target {
+  border-color: rgba(62,240,200,.7);
+  box-shadow: 0 0 0 3px rgba(62,240,200,.35);
+  animation: target-flash 1.8s ease;
+}
+.feat-item { scroll-margin-top: 16px; }
+.feat-item:target {
+  border-color: rgba(62,240,200,.9);
+  box-shadow: 0 0 0 4px rgba(62,240,200,.4);
+  animation: target-flash 1.8s ease;
+}
+@keyframes target-flash {
+  0% { box-shadow: 0 0 0 6px rgba(62,240,200,.55); }
+  100% { box-shadow: 0 0 0 3px rgba(62,240,200,.35); }
+}
+
+/* ── 回到热门悬浮按钮 ── */
+.back-to-hot {
+  position: fixed;
+  right: 16px;
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 4px 0 3px;
+  border-radius: 50%;
+  background: rgba(26, 29, 40, 0.72);
+  border: 1px solid rgba(255,255,255,.28);
+  color: #f5f7fb;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  line-height: 1;
+}
+.back-to-hot[hidden] { display: none !important; }
+.back-to-hot-arrow {
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 700;
+}
+.back-to-hot-label {
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+.back-to-hot:hover { border-color: var(--mint); color: var(--mint); }
+
 /* ── 筛选标签条（全部任务/白嫖/限免/…） ── */
 .tabs {
   display: flex;
@@ -112,6 +231,28 @@
   word-break: break-word;
 }
 
+/* 用途行 */
+.item-use {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+  margin: 2px 0 8px;
+  overflow-wrap: anywhere;
+}
+.item-use-label {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: rgba(62,240,200,.13);
+  color: var(--mint);
+  margin-right: 6px;
+  vertical-align: baseline;
+  line-height: 1.6;
+}
+
 /* 价格行 */
 .price-row {
   display: flex;
@@ -217,6 +358,24 @@
 .badge-important { background: #ff6b81; color: #1a0008; }
 .badge-hot       { background: #ffc44d; color: #1a0d00; }
 .badge-useful    { background: #3ef0c8; color: #001a14; }
+/* 【新增】标签：蓝紫/白底描边，与重要/热门/实用明显区分 */
+.badge-new {
+  background: #1e1a4a;
+  color: #c5b8ff;
+  border: 1px solid #6c5ce7;
+  letter-spacing: .06em;
+}
+
+/* 配图 */
+.item-img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 0 0 10px;
+  display: block;
+  object-fit: cover;
+}
 
 /* 底部：来源 + 领取按钮 */
 .item-foot {
@@ -230,7 +389,7 @@
   font-size: 12px;
   color: #a3aab8;
 }
-.item-foot .source-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item-foot .source-name { flex: 1; min-width: 0; overflow-wrap: anywhere; white-space: normal; line-height: 1.5; }
 
 /* 领取/查看按钮 */
 .open-link {

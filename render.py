@@ -44,9 +44,14 @@ STATUS_RE = re.compile(r"^状态：(已核实|部分失败|失败)")
 URL_IN_TEXT_RE = re.compile(r"(?:原文链接|链接)[：:]\s*(https?://\S+)")
 RISK_RE = re.compile(r"⚠\s*风险高(?:（[^）]*）)?")
 
-# 重点标签解析
-BADGE_RE = re.compile(r"【(重要|热门|实用)】")
+# 重点标签解析（含【新增】）
+BADGE_RE = re.compile(r"【(重要|热门|实用|新增)】")
 BADGE_PRIORITY = {"重要": 0, "热门": 1, "实用": 2}
+# 【新增】不计入重点优先级，单独处理
+NEW_BADGE_RE = re.compile(r"【新增】")
+
+# 上架时间解析（薅羊毛专用）
+LISTING_TIME_RE = re.compile(r"上架[：:]\s*(\d{4}-\d{2}-\d{2}(?:\s+\d{2}:\d{2})?)")
 
 # 原文标题 / 英文原标题（全/半角冒号），不误匹配「原文链接」
 ORIG_TITLE_RE = re.compile(
@@ -129,7 +134,7 @@ def parse_status(first_line: str) -> str | None:
 # ── 标签相关 ──────────────────────────────────────────────────────────────────
 
 def extract_badges(raw_title: str) -> tuple[list[str], str]:
-    """从原始标题中提取标签，返回 (标签列表去重, 去掉标签后的纯标题)。"""
+    """从原始标题中提取标签，返回 (标签列表去重含新增, 去掉所有标签后的纯标题)。"""
     found = BADGE_RE.findall(raw_title)
     seen: dict[str, None] = {}
     for b in found:
@@ -139,27 +144,43 @@ def extract_badges(raw_title: str) -> tuple[list[str], str]:
     return badges, clean_title
 
 
-def badges_html(badges: list[str]) -> str:
-    """生成徽章 HTML，顺序固定：重要 > 热门 > 实用。"""
+def extract_hot_badges(badges: list[str]) -> list[str]:
+    """返回重点标签（重要/热门/实用），排除【新增】。"""
+    return [b for b in badges if b in BADGE_PRIORITY]
+
+
+def badges_html(badges: list[str], include_new: bool = False) -> str:
+    """生成徽章 HTML。
+    badges 可含「新增」。
+    include_new=True 时也渲染 badge-new；否则只渲染重要/热门/实用。
+    顺序：新增（若include_new）> 重要 > 热门 > 实用。
+    """
     if not badges:
         return ""
-    ordered = sorted(badges, key=lambda b: BADGE_PRIORITY.get(b, 99))
+    hot = [b for b in badges if b in BADGE_PRIORITY]
+    is_new = "新增" in badges
+    ordered = sorted(hot, key=lambda b: BADGE_PRIORITY.get(b, 99))
     badge_cls = {"重要": "badge-important", "热门": "badge-hot", "实用": "badge-useful"}
-    spans = [
-        f'<span class="badge {badge_cls.get(b, "badge-other")}">{esc(b)}</span>'
-        for b in ordered
-    ]
+    spans = []
+    if include_new and is_new:
+        spans.append('<span class="badge badge-new">新增</span>')
+    for b in ordered:
+        spans.append(f'<span class="badge {badge_cls.get(b, "badge-other")}">{esc(b)}</span>')
+    if not spans:
+        return ""
     return '<span class="badges">' + "".join(spans) + "</span>"
 
 
 def item_priority(badges: list[str]) -> int:
-    if not badges:
+    """仅按重点标签（重要/热门/实用）计算优先级，忽略【新增】。"""
+    hot = [b for b in badges if b in BADGE_PRIORITY]
+    if not hot:
         return 999
-    return min(BADGE_PRIORITY.get(b, 99) for b in badges)
+    return min(BADGE_PRIORITY.get(b, 99) for b in hot)
 
 
 def data_tags_attr(badges: list[str]) -> str:
-    cls_map = {"重要": "important", "热门": "hot", "实用": "useful"}
+    cls_map = {"重要": "important", "热门": "hot", "实用": "useful", "新增": "new"}
     vals = [cls_map.get(b, b) for b in badges]
     return ' data-tags="' + esc(" ".join(vals)) + '"'
 
@@ -267,7 +288,7 @@ def parse_markdown(path: Path, kind: str) -> dict:
             for (s, sub), block in buckets.items():
                 if s == sec:
                     merged.extend(split_items(block))
-            sections[sec] = sort_items_by_badge(merged)
+            sections[sec] = sort_items_deals(merged)
         result["sections"] = sections
     return result
 
@@ -332,6 +353,81 @@ def extract_url_and_fields(body: str) -> tuple[str | None, str | None, str | Non
         i += 2
     desc = re.sub(r"\s+", " ", desc).strip("。;； ").strip()
     return url, risk, orig_title, desc, fields
+
+
+# ── 薅羊毛专用：上架时间 / 用途 解析 ────────────────────────────────────────
+
+LISTING_TIME_LINE_RE = re.compile(r"(?:^|\n)\s*上架[：:]\s*(\d{4}-\d{2}-\d{2}(?:\s+\d{2}:\d{2})?)\s*(?:\n|$)")
+USE_LINE_RE = re.compile(r"(?:^|\n)\s*用途[：:]\s*(.+?)(?=\n|$)")
+
+
+def extract_listing_time(body: str) -> tuple[datetime | None, str]:
+    """从正文提取「上架：YYYY-MM-DD HH:MM」，返回 (datetime或None, 剥掉上架行后的正文)。"""
+    m = LISTING_TIME_LINE_RE.search(body)
+    if not m:
+        return None, body
+    time_str = m.group(1).strip()
+    new_body = (body[: m.start()] + body[m.end() :]).strip()
+    try:
+        if len(time_str) == 10:
+            time_str += " 00:00"
+        dt = datetime.strptime(time_str, "%Y-%m-%d %H:%M").replace(tzinfo=BJ)
+        return dt, new_body
+    except ValueError:
+        return None, new_body
+
+
+def extract_use_line(body: str) -> tuple[str | None, str]:
+    """从正文提取「用途：…」行，返回 (用途文字或None, 剥掉后的正文)。"""
+    m = USE_LINE_RE.search(body)
+    if not m:
+        return None, body
+    use_text = m.group(1).strip()
+    new_body = (body[: m.start()] + body[m.end() :]).strip()
+    return use_text, new_body
+
+
+def sort_items_deals(items: list[tuple[str, str]]) -> list[tuple[str, str]]:
+    """薅羊毛专用排序（替换 sort_items_by_badge for deals）：
+    - 带【新增】的全部在前（新增间按上架时间新→旧；无上架时间的新增在有时间的新增之后，保持稿内相对顺序）
+    - 其余条目按上架时间新→旧；无上架时间的保持稿内相对顺序，排在有时间的非新增之后
+    """
+    new_with_time: list[tuple[datetime, int, tuple[str, str]]] = []
+    new_without_time: list[tuple[int, tuple[str, str]]] = []
+    rest_with_time: list[tuple[datetime, int, tuple[str, str]]] = []
+    rest_without_time: list[tuple[int, tuple[str, str]]] = []
+
+    for idx, item in enumerate(items):
+        raw_title, body = item
+        badges, _ = extract_badges(raw_title)
+        is_new = "新增" in badges
+        listing_time, _ = extract_listing_time(body)
+        if is_new:
+            if listing_time is not None:
+                new_with_time.append((listing_time, idx, item))
+            else:
+                new_without_time.append((idx, item))
+        else:
+            if listing_time is not None:
+                rest_with_time.append((listing_time, idx, item))
+            else:
+                rest_without_time.append((idx, item))
+
+    # 新增有时间的：按时间新→旧（降序）
+    new_with_time.sort(key=lambda x: (-x[0].timestamp(), x[1]))
+    # 其余有时间的：按时间新→旧（降序）
+    rest_with_time.sort(key=lambda x: (-x[0].timestamp(), x[1]))
+
+    result: list[tuple[str, str]] = []
+    for _t, _i, item in new_with_time:
+        result.append(item)
+    for _i, item in new_without_time:
+        result.append(item)
+    for _t, _i, item in rest_with_time:
+        result.append(item)
+    for _i, item in rest_without_time:
+        result.append(item)
+    return result
 
 
 def parse_risk(risk: str | None) -> tuple[str, str]:
@@ -809,22 +905,46 @@ _CAT_CLS = {
 }
 
 
-def render_item_deals(raw_title: str, body: str, sec: str, is_feat: bool = False) -> str:
+def render_item_deals(
+    raw_title: str,
+    body: str,
+    sec: str,
+    is_feat: bool = False,
+    item_id: str = "",
+    out_path: Path | None = None,
+) -> str:
     """渲染薅羊毛条目 HTML 片段。"""
     badges, clean_title = extract_badges(raw_title)
-    url, risk, orig_title, desc, fields = extract_url_and_fields(body)
+    hot_badges = extract_hot_badges(badges)  # 重要/热门/实用（不含新增）
+
+    # 剥掉新字段：用途、上架时间（配图在 extract_url_and_fields 里剥）
+    use_text, body = extract_use_line(body)
+    listing_dt, body = extract_listing_time(body)
+
+    img_url, body_wo_img = extract_image_url(body)
+    url, risk, orig_title, desc, fields = extract_url_and_fields(body_wo_img)
     dtags = data_tags_attr(badges)
     cat_data = f' data-cat="{esc(sec)}"'
 
     card_cls = "feat-item" if is_feat else "item"
-    parts = [f'<article class="{card_cls}"{dtags}{cat_data}>']
+    id_attr = f' id="{esc(item_id)}"' if item_id else ""
+    parts = [f'<article class="{card_cls}"{id_attr}{dtags}{cat_data}>']
+
+    # 配图：只有带重点标签（非仅新增）的条目才显示
+    if hot_badges and img_url:
+        local = fetch_and_store_image(img_url)
+        if local is not None:
+            src = img_src_for(out_path, local)
+            parts.append(
+                f'<img class="item-img" src="{esc(src)}" alt="{esc(clean_title)}">'
+            )
 
     # 栏目标签
     cat_cls = _CAT_CLS.get(sec, "deal")
     parts.append(f'<div class="cat-tag {cat_cls}">{esc(sec)}</div>')
 
-    # 重点徽章
-    bhtml = badges_html(badges)
+    # 重点徽章（含【新增】）
+    bhtml = badges_html(badges, include_new=True)
     if bhtml:
         parts.append(bhtml)
 
@@ -839,6 +959,12 @@ def render_item_deals(raw_title: str, body: str, sec: str, is_feat: bool = False
     # 原文标题副标题
     if orig_title:
         parts.append(f'<p class="title-en">{esc(orig_title)}</p>')
+
+    # 用途行（在原文标题之后、价格/摘要之前）
+    if use_text:
+        parts.append(
+            f'<p class="item-use"><span class="item-use-label">用途</span>{esc(use_text)}</p>'
+        )
 
     # 价格行（从「价格」字段提取）
     price_raw = fields.get("价格", "")
@@ -875,11 +1001,22 @@ def render_item_deals(raw_title: str, body: str, sec: str, is_feat: bool = False
     if field_rows:
         parts.append('<dl class="fields">' + "".join(field_rows) + "</dl>")
 
-    # 底部：来源 + 领取/查看
+    # 底部：来源 + 上架时间 + 领取/查看
     source = fields.get("来源", "")
+    listing_short = ""
+    if listing_dt is not None:
+        listing_short = "上架 " + listing_dt.strftime("%m-%d %H:%M")
+    source_line = ""
+    if source and listing_short:
+        source_line = source + " · " + listing_short
+    elif source:
+        source_line = source
+    elif listing_short:
+        source_line = listing_short
+
     parts.append('<div class="item-foot">')
-    if source:
-        parts.append(f'<span class="source-name">{esc(source)}</span>')
+    if source_line:
+        parts.append(f'<span class="source-name">{esc(source_line)}</span>')
     if url:
         btn_txt = "领取 / 查看 →"
         parts.append(
@@ -891,12 +1028,80 @@ def render_item_deals(raw_title: str, body: str, sec: str, is_feat: bool = False
     return "\n".join(parts)
 
 
-def render_deals_content(data: dict) -> tuple[str, str, str]:
-    """返回 (content_html, tabs_html, pill_html_str)。"""
+def _deals_item_ids(data: dict) -> dict[tuple[str, int], str]:
+    """为每条薅羊毛条目生成稳定且唯一的卡片 id：key=(板块, 板块内排序后下标)。
+    热门区与卡片共用，保证 href 与 id 一一对应；重复时追加 -2、-3。"""
+    ids: dict[tuple[str, int], str] = {}
+    seen: dict[str, int] = {}
+    for sec in DEALS_SECTIONS:
+        for idx, (raw_title, body) in enumerate(data.get("sections", {}).get(sec) or []):
+            base = make_item_id(sec, raw_title, body)
+            seen[base] = seen.get(base, 0) + 1
+            ids[(sec, idx)] = base if seen[base] == 1 else f"{base}-{seen[base]}"
+    return ids
+
+
+def _render_hot_zone_deals(data: dict, ids: dict[tuple[str, int], str] | None = None) -> str:
+    """今日热门（薅羊毛版）：按板块分组，各板块最多 5 条，无重点条目的板块不显示。
+    进入条件：带【重要】【热门】【实用】（【新增】单独不算，但叠加时仍显示徽章）。
+    组内排序（TASK3 §1.1）：【重要】>【热门】>【实用】；同档按上架时间新→旧；
+    无上架时间的保持稿内相对顺序，排在同档有时间者之后。
+    """
+    groups: list[str] = []
+    for sec in DEALS_SECTIONS:
+        items = data.get("sections", {}).get(sec) or []
+        tagged: list[tuple[int, int, float, str, str, list[str], str]] = []
+        n = 0
+        for raw_title, body in items:
+            badges, clean = extract_badges(raw_title)
+            hot = extract_hot_badges(badges)
+            if not hot:
+                n += 1
+                continue
+            listing_dt, _ = extract_listing_time(body)
+            # 时间戳：有时间用负值（越大越新→越小越前），无时间用很大正数（后排）
+            ts = -listing_dt.timestamp() if listing_dt else float("inf")
+            tagged.append((item_priority(badges), n, ts, raw_title, body, badges, clean))
+            n += 1
+        # 重要>热门>实用；同档：有上架时间者新→旧（ts 为负时间戳），无时间者(inf)在后，再按稿内下标 n 稳定
+        # 注意 n 是 sort_items_deals 之后的板块内顺序，而稿内相对顺序保持不变（无时间条目在其中相对顺序未变）
+        tagged.sort(key=lambda t: (t[0], t[2], t[1]))
+        tagged = tagged[:5]
+        if not tagged:
+            continue
+        block = [
+            f'<div class="hot-group">',
+            f'<h3 class="hot-sec">{esc(sec)}</h3>',
+            '<ul class="hot-list">',
+        ]
+        for _prio, _n, _ts, raw_title, body, badges, clean in tagged:
+            iid = (ids or {}).get((sec, _n)) or make_item_id(sec, raw_title, body)
+            bhtml = badges_html(badges, include_new=True)
+            block.append(
+                f'<li><a class="hot-link" href="#{esc(iid)}" data-cat="{esc(sec)}">{bhtml}'
+                f'<span class="hot-text">{esc(clean)}</span></a></li>'
+            )
+        block.append("</ul></div>")
+        groups.append("\n".join(block))
+
+    if not groups:
+        return '<div id="hot" class="hot-anchor"></div>'
+    return (
+        '<section id="hot" class="hot-zone">\n'
+        '<h2 class="hot-title">今日热门</h2>\n' + "\n".join(groups) + "\n</section>"
+    )
+
+
+def render_deals_content(data: dict, out_path: Path | None = None) -> tuple[str, str, str, str]:
+    """返回 (content_html, tabs_html, pill_html_str, hot_html)。"""
     pill = pill_html(data.get("status"), data["updated"], data.get("failed", False))
 
     if data["failed"]:
-        return '<p class="fail-panel">本次刷新失败</p>', "", pill
+        return '<p class="fail-panel">本次刷新失败</p>', "", pill, '<div id="hot" class="hot-anchor"></div>'
+
+    cleanup_old_images()
+    ids = _deals_item_ids(data)
+    hot = _render_hot_zone_deals(data, ids)
 
     # 筛选 tabs
     tab_btns = ['<button type="button" class="on" data-cat="all">全部任务</button>']
@@ -913,21 +1118,24 @@ def render_deals_content(data: dict) -> tuple[str, str, str]:
         parts.append(f'<section class="board" data-sec="{esc(sec)}">')
         parts.append(f'<div class="board-header">{esc(sec)}</div>')
 
-        # 封面任务（全局最多一次，第一个带标签条目）
+        # 封面任务（全局最多一次，第一个带重点标签条目——新增不算）
         start_idx = 0
         if not feat_done and items:
             first_badges, _ = extract_badges(items[0][0])
-            if first_badges:
+            first_hot = extract_hot_badges(first_badges)
+            if first_hot:
                 raw_title, body = items[0]
-                parts.append(render_item_deals(raw_title, body, sec, is_feat=True))
+                iid = ids[(sec, 0)]
+                parts.append(render_item_deals(raw_title, body, sec, is_feat=True, item_id=iid, out_path=out_path))
                 start_idx = 1
                 feat_done = True
 
         remaining = items[start_idx:]
         if remaining:
             parts.append('<div class="board-grid">')
-            for raw_title, body in remaining:
-                parts.append(render_item_deals(raw_title, body, sec))
+            for off, (raw_title, body) in enumerate(remaining):
+                iid = ids[(sec, start_idx + off)]
+                parts.append(render_item_deals(raw_title, body, sec, item_id=iid, out_path=out_path))
             parts.append("</div>")
         elif start_idx == 0:
             parts.append('<p class="empty">暂无条目</p>')
@@ -935,7 +1143,7 @@ def render_deals_content(data: dict) -> tuple[str, str, str]:
         parts.append("</section>")
 
     parts.append("</div>")
-    return "\n".join(parts), tabs_html, pill
+    return "\n".join(parts), tabs_html, pill, hot
 
 
 # ── 筛选 JS ───────────────────────────────────────────────────────────────────
@@ -946,15 +1154,36 @@ FILTER_JS = """<script>
   var board=document.getElementById('board');
   if(!tabs||!board) return;
   var items=[].slice.call(board.querySelectorAll('[data-cat]'));
+  var currentCat='all';
   tabs.addEventListener('click',function(e){
     var b=e.target;
     if(b.tagName!=='BUTTON') return;
     [].forEach.call(tabs.querySelectorAll('button'),function(x){x.classList.toggle('on',x===b);});
-    var cat=b.dataset.cat;
+    currentCat=b.dataset.cat;
     items.forEach(function(t){
-      t.style.display=(cat==='all'||t.dataset.cat===cat)?'':'none';
+      t.style.display=(currentCat==='all'||t.dataset.cat===currentCat)?'':'none';
     });
   });
+  // 热门区点击：若目标卡片被 tab 筛选隐藏，先切回「全部任务」再跳转
+  var hot=document.getElementById('hot');
+  if(hot){
+    hot.addEventListener('click',function(e){
+      var a=e.target.closest('.hot-link');
+      if(!a) return;
+      var href=a.getAttribute('href');
+      if(!href||href[0]!=='#') return;
+      var targetEl=document.getElementById(href.slice(1));
+      if(!targetEl) return;
+      if(targetEl.style.display==='none'){
+        // 切回全部
+        [].forEach.call(tabs.querySelectorAll('button'),function(x){
+          x.classList.toggle('on',x.dataset.cat==='all');
+        });
+        currentCat='all';
+        items.forEach(function(t){ t.style.display=''; });
+      }
+    });
+  }
 })();
 </script>"""
 
@@ -1058,7 +1287,7 @@ def render_page(kind: str, source: Path | None, sample: bool = False, out_path: 
         )
 
     # deals
-    content, tabs, pill = render_deals_content(data)
+    content, tabs, pill, hot = render_deals_content(data, out_path)
     return fill_template(
         "deals.html",
         {
@@ -1069,6 +1298,7 @@ def render_page(kind: str, source: Path | None, sample: bool = False, out_path: 
             "updated": esc(data["updated"]),
             "muse_status": esc("失败" if data.get("failed") else _status_for_meta(data.get("status"))),
             "pill": pill,
+            "hot": hot,
             "tabs": tabs,
             "content": content,
             "filter_js": FILTER_JS,
