@@ -193,8 +193,20 @@ footer {
   color: #a3aab8;
   font-size: 12px;
   line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
 }
 footer p { margin: 0; }
+footer .visit-count {
+  font-size: 11px;
+  color: #8b919e;
+  letter-spacing: .02em;
+  line-height: 1.6;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
 
 /* D 夜间刊 · 首页样式 */
 
@@ -361,7 +373,9 @@ footer p { margin: 0; }
     </main>
     <footer>
       <p>由公开报道整理，仅供查阅。</p>
+      <p class="visit-count" id="busuanzi_container_site_pv" style="display:none">全站访问 <span id="busuanzi_value_site_pv"></span> 次 · 访客 <span id="busuanzi_value_site_uv"></span> 人</p>
     </footer>
   </div>
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 </body>
 </html>

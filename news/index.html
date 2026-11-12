@@ -196,8 +196,20 @@ footer {
   color: #a3aab8;
   font-size: 12px;
   line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
 }
 footer p { margin: 0; }
+footer .visit-count {
+  font-size: 11px;
+  color: #8b919e;
+  letter-spacing: .02em;
+  line-height: 1.6;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
 
 /* D 夜间刊 · 资讯页样式 */
 
@@ -1121,6 +1133,7 @@ html { scroll-behavior: smooth; }
     </main>
     <footer>
       <p>来源限定白名单，均为 48 小时内公开报道</p>
+      <p class="visit-count" id="busuanzi_container_page_pv" style="display:none">本页访问 <span id="busuanzi_value_page_pv"></span> 次 · 访客 <span id="busuanzi_value_site_uv"></span> 人</p>
     </footer>
   </div>
   <a class="back-to-hot" href="#hot" aria-label="回到热门"><span class="back-to-hot-arrow" aria-hidden="true">↑</span><span class="back-to-hot-label">热门</span></a>
@@ -1153,5 +1166,6 @@ html { scroll-behavior: smooth; }
     io.observe(hot);
   })();
   </script>
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 </body>
 </html>
