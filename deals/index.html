@@ -204,6 +204,125 @@ footer p { margin: 0; }
 /* ── 状态文字（已在 pill 里体现） ── */
 .status-partial { display: none; }
 
+/* ── 平滑滚动 / 底部留白（避免 FAB 遮挡） ── */
+html { scroll-behavior: smooth; }
+.wrap { padding-bottom: 120px; }
+@media (max-width: 700px) {
+  .wrap { padding-bottom: 120px; }
+  .item-foot { padding-right: 60px; }
+}
+
+/* ── 今日热门区 ── */
+.hot-zone {
+  margin: 0 0 20px;
+  padding: 18px 16px 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+.hot-title {
+  margin: 0 0 14px;
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+.hot-group { margin: 0 0 10px; }
+.hot-sec {
+  font-size: 12px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 4px;
+  font-weight: 700;
+}
+.hot-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.hot-list li + li { margin-top: 10px; }
+.hot-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex-wrap: nowrap;
+  min-height: 44px;
+  padding: 6px 2px;
+  color: var(--text);
+  text-decoration: none;
+}
+.hot-link .badges { flex: 0 0 auto; margin-top: 2px; }
+.hot-link:hover .hot-text { color: var(--mint); }
+.hot-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+  font-weight: 650;
+}
+.hot-anchor { height: 0; overflow: hidden; }
+
+/* ── 卡片锚点高亮 ── */
+.item { scroll-margin-top: 16px; }
+.item:target {
+  border-color: rgba(62,240,200,.7);
+  box-shadow: 0 0 0 3px rgba(62,240,200,.35);
+  animation: target-flash 1.8s ease;
+}
+.feat-item { scroll-margin-top: 16px; }
+.feat-item:target {
+  border-color: rgba(62,240,200,.9);
+  box-shadow: 0 0 0 4px rgba(62,240,200,.4);
+  animation: target-flash 1.8s ease;
+}
+@keyframes target-flash {
+  0% { box-shadow: 0 0 0 6px rgba(62,240,200,.55); }
+  100% { box-shadow: 0 0 0 3px rgba(62,240,200,.35); }
+}
+
+/* ── 回到热门悬浮按钮 ── */
+.back-to-hot {
+  position: fixed;
+  right: 16px;
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 4px 0 3px;
+  border-radius: 50%;
+  background: rgba(26, 29, 40, 0.72);
+  border: 1px solid rgba(255,255,255,.28);
+  color: #f5f7fb;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  line-height: 1;
+}
+.back-to-hot[hidden] { display: none !important; }
+.back-to-hot-arrow {
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 700;
+}
+.back-to-hot-label {
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+.back-to-hot:hover { border-color: var(--mint); color: var(--mint); }
+
 /* ── 筛选标签条（全部任务/白嫖/限免/…） ── */
 .tabs {
   display: flex;
@@ -312,6 +431,28 @@ footer p { margin: 0; }
   word-break: break-word;
 }
 
+/* 用途行 */
+.item-use {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+  margin: 2px 0 8px;
+  overflow-wrap: anywhere;
+}
+.item-use-label {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: rgba(62,240,200,.13);
+  color: var(--mint);
+  margin-right: 6px;
+  vertical-align: baseline;
+  line-height: 1.6;
+}
+
 /* 价格行 */
 .price-row {
   display: flex;
@@ -417,6 +558,24 @@ footer p { margin: 0; }
 .badge-important { background: #ff6b81; color: #1a0008; }
 .badge-hot       { background: #ffc44d; color: #1a0d00; }
 .badge-useful    { background: #3ef0c8; color: #001a14; }
+/* 【新增】标签：蓝紫/白底描边，与重要/热门/实用明显区分 */
+.badge-new {
+  background: #1e1a4a;
+  color: #c5b8ff;
+  border: 1px solid #6c5ce7;
+  letter-spacing: .06em;
+}
+
+/* 配图 */
+.item-img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 0 0 10px;
+  display: block;
+  object-fit: cover;
+}
 
 /* 底部：来源 + 领取按钮 */
 .item-foot {
@@ -430,7 +589,7 @@ footer p { margin: 0; }
   font-size: 12px;
   color: #a3aab8;
 }
-.item-foot .source-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item-foot .source-name { flex: 1; min-width: 0; overflow-wrap: anywhere; white-space: normal; line-height: 1.5; }
 
 /* 领取/查看按钮 */
 .open-link {
@@ -491,12 +650,25 @@ footer p { margin: 0; }
       <div class="pill"><span class="pill-dot warn"></span>部分失败 · 11-12 13:05 北京时间</div>
     </header>
     
+    <section id="hot" class="hot-zone">
+<h2 class="hot-title">今日热门</h2>
+<div class="hot-group">
+<h3 class="hot-sec">白嫖</h3>
+<ul class="hot-list">
+<li><a class="hot-link" href="#item-86d79e1330d3" data-cat="白嫖"><span class="badges"><span class="badge badge-useful">实用</span></span><span class="hot-text">小渔排班宣布永久免费：开发了 8 年的轮班日历，无广告、无订阅</span></a></li>
+</ul></div>
+<div class="hot-group">
+<h3 class="hot-sec">限免</h3>
+<ul class="hot-list">
+<li><a class="hot-link" href="#item-d66015b15ec1" data-cat="限免"><span class="badges"><span class="badge badge-useful">实用</span></span><span class="hot-text">微软认证考试免费券（DP-600、DP-700、DP-800）</span></a></li>
+</ul></div>
+</section>
     <div class="tabs" id="tabs"><button type="button" class="on" data-cat="all">全部任务</button><button type="button" data-cat="白嫖">白嫖</button><button type="button" data-cat="限免">限免</button><button type="button" data-cat="低价">低价</button><button type="button" data-cat="币圈空投">币圈空投</button><button type="button" data-cat="NFT">NFT</button></div>
     <main>
       <div class="boards" id="board">
 <section class="board" data-sec="白嫖">
 <div class="board-header">白嫖</div>
-<article class="feat-item" data-tags="useful" data-cat="白嫖">
+<article class="feat-item" id="item-86d79e1330d3" data-tags="useful" data-cat="白嫖">
 <div class="cat-tag free">白嫖</div>
 <span class="badges"><span class="badge badge-useful">实用</span></span>
 <h3><a href="https://www.appinn.com/xiaoyu-shift-calendar-free/" target="_blank" rel="noopener noreferrer">小渔排班宣布永久免费：开发了 8 年的轮班日历，无广告、无订阅</a></h3>
@@ -509,7 +681,7 @@ footer p { margin: 0; }
 </div>
 </article>
 <div class="board-grid">
-<article class="item" data-tags="" data-cat="白嫖">
+<article class="item" id="item-2b6e3c7559e7" data-tags="" data-cat="白嫖">
 <div class="cat-tag free">白嫖</div>
 <h3><a href="https://www.hotukdeals.com/deals/free-large-sea-salt-shaker-lidl-plus-app-5028443" target="_blank" rel="noopener noreferrer">Lidl Plus 应用免费领 Batts 细盐或粗盐罐（仅部分账号）</a></h3>
 <p class="title-en">Free Batts Fine or Coarse Sea Salt Shaker via Lidl Plus app - selected accounts</p>
@@ -521,7 +693,7 @@ footer p { margin: 0; }
 <a class="open-link" href="https://www.hotukdeals.com/deals/free-large-sea-salt-shaker-lidl-plus-app-5028443" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
 </div>
 </article>
-<article class="item" data-tags="" data-cat="白嫖">
+<article class="item" id="item-311ac4723fa1" data-tags="" data-cat="白嫖">
 <div class="cat-tag free">白嫖</div>
 <h3><a href="https://www.hotukdeals.com/deals/free-christmas-tv-magazine-5028167" target="_blank" rel="noopener noreferrer">Together TV 免费圣诞电视杂志（限 3 万册）</a></h3>
 <p class="title-en">Free Christmas TV magazine with registration (limited to 30,000 copies)</p>
@@ -539,7 +711,7 @@ footer p { margin: 0; }
 <section class="board" data-sec="限免">
 <div class="board-header">限免</div>
 <div class="board-grid">
-<article class="item" data-tags="useful" data-cat="限免">
+<article class="item" id="item-d66015b15ec1" data-tags="useful" data-cat="限免">
 <div class="cat-tag limited">限免</div>
 <span class="badges"><span class="badge badge-useful">实用</span></span>
 <h3><a href="https://www.hotukdeals.com/deals/100-free-microsoft-certification-exam-vouchers-dp-600-dp-700-dp-800-5028433" target="_blank" rel="noopener noreferrer">微软认证考试免费券（DP-600、DP-700、DP-800）</a></h3>
@@ -558,7 +730,7 @@ footer p { margin: 0; }
 <section class="board" data-sec="低价">
 <div class="board-header">低价</div>
 <div class="board-grid">
-<article class="item" data-tags="" data-cat="低价">
+<article class="item" id="item-773c89af8535" data-tags="" data-cat="低价">
 <div class="cat-tag deal">低价</div>
 <h3><a href="https://sspai.com/post/118799" target="_blank" rel="noopener noreferrer">One Switch 单设备版限时降价</a></h3>
 <div class="price-row"><span class="price-main">18.00 元</span><span class="price-was">30.00 元</span></div>
@@ -569,7 +741,7 @@ footer p { margin: 0; }
 <a class="open-link" href="https://sspai.com/post/118799" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
 </div>
 </article>
-<article class="item" data-tags="" data-cat="低价">
+<article class="item" id="item-0e0e1e1bad7e" data-tags="" data-cat="低价">
 <div class="cat-tag deal">低价</div>
 <h3><a href="https://slickdeals.net/f/20286318-47-99-256gb-samsung-p9-express-microsd-express-card-at-amazon" target="_blank" rel="noopener noreferrer">三星 P9 Express 256GB microSD Express 存储卡</a></h3>
 <p class="title-en">256GB Samsung P9 Express microSD Express Card $48 + Free S&amp;H</p>
@@ -582,7 +754,7 @@ footer p { margin: 0; }
 <a class="open-link" href="https://slickdeals.net/f/20286318-47-99-256gb-samsung-p9-express-microsd-express-card-at-amazon" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
 </div>
 </article>
-<article class="item" data-tags="" data-cat="低价">
+<article class="item" id="item-a461cf7d234c" data-tags="" data-cat="低价">
 <div class="cat-tag deal">低价</div>
 <h3><a href="https://slickdeals.net/f/20283795-30-62-casio-aw80-series-40mm-men-s-analog-digital-watch-at-amazon" target="_blank" rel="noopener noreferrer">卡西欧 AW80 系列 40mm 男士指针数字双显腕表</a></h3>
 <p class="title-en">Casio AW80 Series 40mm Men’s Analog-Digital Watch</p>
@@ -595,7 +767,7 @@ footer p { margin: 0; }
 <a class="open-link" href="https://slickdeals.net/f/20283795-30-62-casio-aw80-series-40mm-men-s-analog-digital-watch-at-amazon" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
 </div>
 </article>
-<article class="item" data-tags="" data-cat="低价">
+<article class="item" id="item-828bf90180d5" data-tags="" data-cat="低价">
 <div class="cat-tag deal">低价</div>
 <h3><a href="https://slickdeals.net/f/20283333-10-98-klein-tools-rt210-gfci-and-standard-ac-outlet-tester-lowe-s-amazon" target="_blank" rel="noopener noreferrer">Klein Tools 漏电保护插座检测仪</a></h3>
 <p class="title-en">Klein Tools GFCI Outlet Tester</p>
@@ -608,7 +780,7 @@ footer p { margin: 0; }
 <a class="open-link" href="https://slickdeals.net/f/20283333-10-98-klein-tools-rt210-gfci-and-standard-ac-outlet-tester-lowe-s-amazon" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
 </div>
 </article>
-<article class="item" data-tags="" data-cat="低价">
+<article class="item" id="item-99b6089a972e" data-tags="" data-cat="低价">
 <div class="cat-tag deal">低价</div>
 <h3><a href="https://slickdeals.net/f/20281923-men-s-adidas-dayready-open-hem-elastic-trackpants-w-drawcord-black-14-40-free-s-h" target="_blank" rel="noopener noreferrer">adidas Dayready 男士束脚运动裤（黑色）</a></h3>
 <p class="title-en">Men&#x27;s adidas Dayready Open Hem Elastic Trackpants w/ Drawcord (Black)</p>
@@ -621,7 +793,7 @@ footer p { margin: 0; }
 <a class="open-link" href="https://slickdeals.net/f/20281923-men-s-adidas-dayready-open-hem-elastic-trackpants-w-drawcord-black-14-40-free-s-h" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
 </div>
 </article>
-<article class="item" data-tags="" data-cat="低价">
+<article class="item" id="item-69a6ecbb1bd6" data-tags="" data-cat="低价">
 <div class="cat-tag deal">低价</div>
 <h3><a href="https://slickdeals.net/f/20294019-amazon-basics-240w-usb-c-to-usb-c-fast-charging-cable-6f" target="_blank" rel="noopener noreferrer">亚马逊 Amazon Basics 240W USB-C 快充线（6 英尺，两根装）</a></h3>
 <p class="title-en">2-Pk 6&#x27; Amazon Basics 240W USB-C Fast Charging Cable $8.90</p>
@@ -639,7 +811,7 @@ footer p { margin: 0; }
 <section class="board" data-sec="币圈空投">
 <div class="board-header">币圈空投</div>
 <div class="board-grid">
-<article class="item" data-tags="" data-cat="币圈空投">
+<article class="item" id="item-5e84bb260920" data-tags="" data-cat="币圈空投">
 <div class="cat-tag airdrop">币圈空投</div>
 <h3><a href="https://www.binance.com/en/support/announcement/0ea740cbfca045ed935964f4555dc689" target="_blank" rel="noopener noreferrer">币安每日一词：答「Choose Your Binance AI」主题题目瓜分 BNB 奖励</a></h3>
 <p class="title-en">Word of the Day: Test Your Knowledge on “Choose Your Binance AI” to Unlock BNB Rewards!</p>
@@ -652,7 +824,7 @@ footer p { margin: 0; }
 <a class="open-link" href="https://www.binance.com/en/support/announcement/0ea740cbfca045ed935964f4555dc689" target="_blank" rel="noopener noreferrer">领取 / 查看 →</a>
 </div>
 </article>
-<article class="item" data-tags="" data-cat="币圈空投">
+<article class="item" id="item-fc850745a641" data-tags="" data-cat="币圈空投">
 <div class="cat-tag airdrop">币圈空投</div>
 <h3><a href="https://www.binance.com/en/support/announcement/6b80fb6b884e4f5bb60be4ec475d6190" target="_blank" rel="noopener noreferrer">币安学院比特币页：新用户答题领 BTC 代币券（11 月补货）</a></h3>
 <p class="title-en">Binance Academy Bitcoin Page: Complete Quiz to Earn BTC Rewards This November 2026!</p>
@@ -670,7 +842,7 @@ footer p { margin: 0; }
 <section class="board" data-sec="NFT">
 <div class="board-header">NFT</div>
 <div class="board-grid">
-<article class="item" data-tags="" data-cat="NFT">
+<article class="item" id="item-3adccca3a302" data-tags="" data-cat="NFT">
 <div class="cat-tag nft">NFT</div>
 <h3><a href="https://nftcalendar.io/event/jpegz-nft/" target="_blank" rel="noopener noreferrer">JPEGZ</a></h3>
 <div class="price-row"><span class="price-main">免费领取</span></div>
@@ -691,21 +863,60 @@ footer p { margin: 0; }
       <p>内容仅供参考，请以原文为准。标有「⚠ 风险高」的条目请谨慎对待。</p>
     </footer>
   </div>
+  <a class="back-to-hot" href="#hot" aria-label="回到热门"><span class="back-to-hot-arrow" aria-hidden="true">↑</span><span class="back-to-hot-label">热门</span></a>
+  <script>
+  (function () {
+    document.documentElement.classList.add("js");
+  })();
+  (function () {
+    var btn = document.querySelector(".back-to-hot");
+    var hot = document.querySelector(".hot-zone");
+    if (!btn || !hot || !("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      var e = entries[0];
+      if (!e) return;
+      if (e.isIntersecting) btn.setAttribute("hidden", "");
+      else btn.removeAttribute("hidden");
+    }, { threshold: 0 });
+    io.observe(hot);
+  })();
+  </script>
   <script>
 (function(){
   var tabs=document.getElementById('tabs');
   var board=document.getElementById('board');
   if(!tabs||!board) return;
   var items=[].slice.call(board.querySelectorAll('[data-cat]'));
+  var currentCat='all';
   tabs.addEventListener('click',function(e){
     var b=e.target;
     if(b.tagName!=='BUTTON') return;
     [].forEach.call(tabs.querySelectorAll('button'),function(x){x.classList.toggle('on',x===b);});
-    var cat=b.dataset.cat;
+    currentCat=b.dataset.cat;
     items.forEach(function(t){
-      t.style.display=(cat==='all'||t.dataset.cat===cat)?'':'none';
+      t.style.display=(currentCat==='all'||t.dataset.cat===currentCat)?'':'none';
     });
   });
+  // 热门区点击：若目标卡片被 tab 筛选隐藏，先切回「全部任务」再跳转
+  var hot=document.getElementById('hot');
+  if(hot){
+    hot.addEventListener('click',function(e){
+      var a=e.target.closest('.hot-link');
+      if(!a) return;
+      var href=a.getAttribute('href');
+      if(!href||href[0]!=='#') return;
+      var targetEl=document.getElementById(href.slice(1));
+      if(!targetEl) return;
+      if(targetEl.style.display==='none'){
+        // 切回全部
+        [].forEach.call(tabs.querySelectorAll('button'),function(x){
+          x.classList.toggle('on',x.dataset.cat==='all');
+        });
+        currentCat='all';
+        items.forEach(function(t){ t.style.display=''; });
+      }
+    });
+  }
 })();
 </script>
 </body>
