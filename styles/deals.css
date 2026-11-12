@@ -358,7 +358,7 @@ html { scroll-behavior: smooth; }
 .badge-important { background: #ff6b81; color: #1a0008; }
 .badge-hot       { background: #ffc44d; color: #1a0d00; }
 .badge-useful    { background: #3ef0c8; color: #001a14; }
-/* 【新增】标签：蓝紫/白底描边，与重要/热门/实用明显区分 */
+/* 【新增】标签：蓝紫/白底描边，与重点/热门/实用明显区分 */
 .badge-new {
   background: #1e1a4a;
   color: #c5b8ff;

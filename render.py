@@ -45,8 +45,9 @@ URL_IN_TEXT_RE = re.compile(r"(?:原文链接|链接)[：:]\s*(https?://\S+)")
 RISK_RE = re.compile(r"⚠\s*风险高(?:（[^）]*）)?")
 
 # 重点标签解析（含【新增】）
-BADGE_RE = re.compile(r"【(重要|热门|实用|新增)】")
-BADGE_PRIORITY = {"重要": 0, "热门": 1, "实用": 2}
+BADGE_RE = re.compile(r"【(重要|重点|热门|实用|新增)】")
+BADGE_CANON = {"重要": "重点"}  # 旧稿【重要】统一成【重点】
+BADGE_PRIORITY = {"重点": 0, "热门": 1, "实用": 2}
 # 【新增】不计入重点优先级，单独处理
 NEW_BADGE_RE = re.compile(r"【新增】")
 
@@ -138,29 +139,29 @@ def extract_badges(raw_title: str) -> tuple[list[str], str]:
     found = BADGE_RE.findall(raw_title)
     seen: dict[str, None] = {}
     for b in found:
-        seen[b] = None
+        seen[BADGE_CANON.get(b, b)] = None
     badges = list(seen.keys())
     clean_title = BADGE_RE.sub("", raw_title).strip()
     return badges, clean_title
 
 
 def extract_hot_badges(badges: list[str]) -> list[str]:
-    """返回重点标签（重要/热门/实用），排除【新增】。"""
+    """返回重点标签（重点/热门/实用），排除【新增】。"""
     return [b for b in badges if b in BADGE_PRIORITY]
 
 
 def badges_html(badges: list[str], include_new: bool = False) -> str:
     """生成徽章 HTML。
     badges 可含「新增」。
-    include_new=True 时也渲染 badge-new；否则只渲染重要/热门/实用。
-    顺序：新增（若include_new）> 重要 > 热门 > 实用。
+    include_new=True 时也渲染 badge-new；否则只渲染重点/热门/实用。
+    顺序：新增（若include_new）> 重点 > 热门 > 实用。
     """
     if not badges:
         return ""
     hot = [b for b in badges if b in BADGE_PRIORITY]
     is_new = "新增" in badges
     ordered = sorted(hot, key=lambda b: BADGE_PRIORITY.get(b, 99))
-    badge_cls = {"重要": "badge-important", "热门": "badge-hot", "实用": "badge-useful"}
+    badge_cls = {"重点": "badge-important", "热门": "badge-hot", "实用": "badge-useful"}
     spans = []
     if include_new and is_new:
         spans.append('<span class="badge badge-new">新增</span>')
@@ -172,7 +173,7 @@ def badges_html(badges: list[str], include_new: bool = False) -> str:
 
 
 def item_priority(badges: list[str]) -> int:
-    """仅按重点标签（重要/热门/实用）计算优先级，忽略【新增】。"""
+    """仅按重点标签（重点/热门/实用）计算优先级，忽略【新增】。"""
     hot = [b for b in badges if b in BADGE_PRIORITY]
     if not hot:
         return 999
@@ -180,7 +181,7 @@ def item_priority(badges: list[str]) -> int:
 
 
 def data_tags_attr(badges: list[str]) -> str:
-    cls_map = {"重要": "important", "热门": "hot", "实用": "useful", "新增": "new"}
+    cls_map = {"重点": "important", "热门": "hot", "实用": "useful", "新增": "new"}
     vals = [cls_map.get(b, b) for b in badges]
     return ' data-tags="' + esc(" ".join(vals)) + '"'
 
@@ -219,7 +220,7 @@ def split_items(block_lines: list[str]) -> list[tuple[str, str]]:
 
 
 def sort_items_by_badge(items: list[tuple[str, str]]) -> list[tuple[str, str]]:
-    """稳定排序：同栏目内带标签排前（重要>热门>实用），无标签保持原序在后。"""
+    """稳定排序：同栏目内带标签排前（重点>热门>实用），无标签保持原序在后。"""
     def key_fn(item_with_index: tuple[int, tuple[str, str]]) -> tuple[int, int]:
         idx, (raw_title, _body) = item_with_index
         badges, _ = extract_badges(raw_title)
@@ -727,7 +728,7 @@ def render_item_news(
     rcls = "badge-intl" if region == "国际" else "badge-domestic"
     badge_bits = [f'<span class="badge {rcls}">{esc(region)}</span>']
     ordered = sorted(badges, key=lambda b: BADGE_PRIORITY.get(b, 99))
-    badge_cls = {"重要": "badge-important", "热门": "badge-hot", "实用": "badge-useful"}
+    badge_cls = {"重点": "badge-important", "热门": "badge-hot", "实用": "badge-useful"}
     for b in ordered:
         badge_bits.append(
             f'<span class="badge {badge_cls.get(b, "badge-other")}">{esc(b)}</span>'
@@ -915,7 +916,7 @@ def render_item_deals(
 ) -> str:
     """渲染薅羊毛条目 HTML 片段。"""
     badges, clean_title = extract_badges(raw_title)
-    hot_badges = extract_hot_badges(badges)  # 重要/热门/实用（不含新增）
+    hot_badges = extract_hot_badges(badges)  # 重点/热门/实用（不含新增）
 
     # 剥掉新字段：用途、上架时间（配图在 extract_url_and_fields 里剥）
     use_text, body = extract_use_line(body)
@@ -1043,8 +1044,8 @@ def _deals_item_ids(data: dict) -> dict[tuple[str, int], str]:
 
 def _render_hot_zone_deals(data: dict, ids: dict[tuple[str, int], str] | None = None) -> str:
     """今日热门（薅羊毛版）：按板块分组，各板块最多 5 条，无重点条目的板块不显示。
-    进入条件：带【重要】【热门】【实用】（【新增】单独不算，但叠加时仍显示徽章）。
-    组内排序（TASK3 §1.1）：【重要】>【热门】>【实用】；同档按上架时间新→旧；
+    进入条件：带【重点】【热门】【实用】（【新增】单独不算，但叠加时仍显示徽章）。
+    组内排序（TASK3 §1.1）：【重点】>【热门】>【实用】；同档按上架时间新→旧；
     无上架时间的保持稿内相对顺序，排在同档有时间者之后。
     """
     groups: list[str] = []
@@ -1063,7 +1064,7 @@ def _render_hot_zone_deals(data: dict, ids: dict[tuple[str, int], str] | None = 
             ts = -listing_dt.timestamp() if listing_dt else float("inf")
             tagged.append((item_priority(badges), n, ts, raw_title, body, badges, clean))
             n += 1
-        # 重要>热门>实用；同档：有上架时间者新→旧（ts 为负时间戳），无时间者(inf)在后，再按稿内下标 n 稳定
+        # 重点>热门>实用；同档：有上架时间者新→旧（ts 为负时间戳），无时间者(inf)在后，再按稿内下标 n 稳定
         # 注意 n 是 sort_items_deals 之后的板块内顺序，而稿内相对顺序保持不变（无时间条目在其中相对顺序未变）
         tagged.sort(key=lambda t: (t[0], t[2], t[1]))
         tagged = tagged[:5]
