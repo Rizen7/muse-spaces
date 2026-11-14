@@ -98,15 +98,15 @@
   font-size: 14px;
   color: #c3c8d4;
   line-height: 1.5;
-  display: inline-flex;
-  align-items: center;
+  display: flex;
+  align-items: flex-start;
   gap: 8px;
-  padding: 6px 12px;
+  padding: 8px 12px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 12px;
   background: rgba(7,8,13,.6);
   align-self: flex-start;
-  flex-wrap: wrap;
+  max-width: 100%;
 }
 .space-meta .dot {
   width: 8px;
@@ -115,11 +115,22 @@
   background: var(--mint);
   box-shadow: 0 0 10px var(--mint);
   flex: none;
+  margin-top: calc((1.5em - 8px) / 2);
+}
+.space-meta-text {
+  min-width: 0;
+  flex: 1;
 }
 .space-meta:has(.status-partial) .dot { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
 .space-meta:has(.status-fail) .dot { background: var(--rose); box-shadow: 0 0 10px var(--rose); }
-.space-meta .status-fail    { color: var(--rose); font-weight: 700; }
-.space-meta .status-partial { display: inline; color: var(--gold); font-weight: 700; }
+.space-meta .status-fail,
+.space-meta .status-partial {
+  display: inline-block;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.space-meta .status-fail    { color: var(--rose); }
+.space-meta .status-partial { color: var(--gold); }
 
 /* 状态数量标注（如果有）：右下角入口标签 */
 .card-enter {
